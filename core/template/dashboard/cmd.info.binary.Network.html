@@ -1,0 +1,429 @@
+<div class="cmd tooltips cmd-widget cursor #history#" data-type="info" data-subtype="binary" data-cmd_id="#id#"
+	data-cmd_uid="#uid#" data-version="#version#" style="width:150px;min-height:20px;">
+	<style>
+		.lan-sprite,
+		.lan-car-0,
+		.lan-car-1,
+		.lan-freebox_crystal-0,
+		.lan-freebox_crystal-1,
+		.lan-freebox_delta-0,
+		.lan-freebox_delta-1,
+		.lan-freebox_hd-0,
+		.lan-freebox_hd-1,
+		.lan-freebox_mini-0,
+		.lan-freebox_mini-1,
+		.lan-freebox_one-0,
+		.lan-freebox_one-1,
+		.lan-freebox_player-0,
+		.lan-freebox_player-1,
+		.lan-freebox_pop-0,
+		.lan-freebox_pop-1,
+		.lan-freebox_wifi-0,
+		.lan-freebox_wifi-1,
+		.lan-group,
+		.lan-ip_camera-0,
+		.lan-ip_camera-1,
+		.lan-ip_phone-0,
+		.lan-ip_phone-1,
+		.lan-laptop-0,
+		.lan-laptop-1,
+		.lan-multimedia_device-0,
+		.lan-multimedia_device-1,
+		.lan-nas-0,
+		.lan-nas-1,
+		.lan-networking_device-0,
+		.lan-networking_device-1,
+		.lan-other-0,
+		.lan-other-1,
+		.lan-printer-0,
+		.lan-printer-1,
+		.lan-smartphone-0,
+		.lan-smartphone-1,
+		.lan-tablet-0,
+		.lan-tablet-1,
+		.lan-television-0,
+		.lan-television-1,
+		.lan-vg_console-0,
+		.lan-vg_console-1,
+		.lan-workstation-0,
+		.lan-workstation-1 {
+			background: url('plugins/Freebox_OS/core/img/lan-s74b3fabaf7.png') no-repeat
+		}
+		.lan-sprite,
+		.lan-car-0,
+		.lan-car-1,
+		.lan-freebox_crystal-0,
+		.lan-freebox_crystal-1,
+		.lan-freebox_delta-0,
+		.lan-freebox_delta-1,
+		.lan-freebox_hd-0,
+		.lan-freebox_hd-1,
+		.lan-freebox_mini-0,
+		.lan-freebox_mini-1,
+		.lan-freebox_one-0,
+		.lan-freebox_one-1,
+		.lan-freebox_player-0,
+		.lan-freebox_player-1,
+		.lan-freebox_pop-0,
+		.lan-freebox_pop-1,
+		.lan-freebox_wifi-0,
+		.lan-freebox_wifi-1,
+		.lan-group,
+		.lan-ip_camera-0,
+		.lan-ip_camera-1,
+		.lan-ip_phone-0,
+		.lan-ip_phone-1,
+		.lan-laptop-0,
+		.lan-laptop-1,
+		.lan-multimedia_device-0,
+		.lan-multimedia_device-1,
+		.lan-nas-0,
+		.lan-nas-1,
+		.lan-networking_device-0,
+		.lan-networking_device-1,
+		.lan-other-0,
+		.lan-other-1,
+		.lan-printer-0,
+		.lan-printer-1,
+		.lan-smartphone-0,
+		.lan-smartphone-1,
+		.lan-tablet-0,
+		.lan-tablet-1,
+		.lan-television-0,
+		.lan-television-1,
+		.lan-vg_console-0,
+		.lan-vg_console-1,
+		.lan-workstation-0,
+		.lan-workstation-1 {
+			width: 60px;
+			height: 60px;
+			background-repeat: no-repeat
+		}
+
+		.lan-host {
+			padding: 3px;
+			width: 115px;
+			height: 115px;
+			margin: 5px;
+			overflow: hidden;
+			float: left
+		}
+
+		.lan-host-0 {
+			color: #999
+		}
+
+		.lan-host-selected {
+			border: 1px solid #DDD;
+			padding: 2px;
+			text-shadow: 1px 1px #000000;
+			background: #980000
+		}
+
+		.lan-host-0 {
+			opacity: 0.5
+		}
+
+		.lan-host-img {
+			margin: 0 auto
+		}
+
+		.lan-host-name,
+		.lan-host-vendor {
+			margin-top: 5px;
+			overflow: hidden;
+			text-align: center;
+			white-space: normal
+		}
+
+		.lan-host-vendor {
+			margin-top: 0px
+		}
+
+		.lan-vendor-name,
+		.lan-host-vendor,
+		.dhcp-host-detail {
+			f1t-size: 10px;
+			color: #666;
+			f1t-style: italic
+		}
+
+		.parental-filter-grid .x-grid-cell {
+			vertical-align: middle
+		}
+
+		.filter-row-allowed .x-grid-cell {
+			background-color: #EFE
+		}
+
+		.filter-row-denied .x-grid-cell {
+			background-color: #FEE
+		}
+
+		.filter-row-web1ly .x-grid-cell {
+			background-color: #EEF
+		}
+
+		.connection-status-down .x-grid-td {
+			background-color: #FEE
+		}
+
+		.connection-status-up .x-grid-td {
+			background-color: #EFE
+		}
+
+		.lan-car-0 {
+			background-position: 0 0
+		}
+
+		.lan-car-1 {
+			background-position: 0 2.27273%
+		}
+		.lan-freebox_crystal-0 {
+			background-position: 0 4.54545%
+		}
+
+		.lan-freebox_crystal-1 {
+			background-position: 0 6.81818%
+		}
+
+		.lan-freebox_delta-0 {
+			background-position: 0 9.09091%
+		}
+
+		.lan-freebox_delta-1 {
+			background-position: 0 11.36364%
+		}
+
+		.lan-freebox_hd-0 {
+			background-position: 0 13.63636%
+		}
+
+		.lan-freebox_hd-1 {
+			background-position: 0 15.90909%
+		}
+
+		.lan-freebox_mini-0 {
+			background-position: 0 18.18182%
+		}
+
+		.lan-freebox_mini-1 {
+			background-position: 0 20.45455%
+		}
+
+		.lan-freebox_one-0 {
+			background-position: 0 22.72727%
+		}
+
+		.lan-freebox_one-1 {
+			background-position: 0 25%
+		}
+
+		.lan-freebox_player-0 {
+			background-position: 0 27.27273%
+		}
+
+		.lan-freebox_player-1 {
+			background-position: 0 29.54545%
+		}
+
+		.lan-freebox_pop-0 {
+			background-position: 0 31.81818%
+		}
+
+		.lan-freebox_pop-1 {
+			background-position: 0 34.09091%
+		}
+
+		.lan-freebox_wifi-0 {
+			background-position: 0 36.36364%
+		}
+
+		.lan-freebox_wifi-1 {
+			background-position: 0 38.63636%
+		}
+
+		.lan-group {
+			background-position: 0 40.90909%
+		}
+
+		.lan-ip_camera-0 {
+			background-position: 0 43.18182%
+		}
+
+		.lan-ip_camera-1 {
+			background-position: 0 45.45455%
+		}
+
+		.lan-ip_phone-0 {
+			background-position: 0 47.72727%
+		}
+
+		.lan-ip_phone-1 {
+			background-position: 0 50%
+		}
+
+		.lan-laptop-0 {
+			background-position: 0 52.27273%
+		}
+
+		.lan-laptop-1 {
+			background-position: 0 54.54545%
+		}
+
+		.lan-multimedia_device-0 {
+			background-position: 0 56.81818%
+		}
+
+		.lan-multimedia_device-1 {
+			background-position: 0 59.09091%
+		}
+
+		.lan-nas-0 {
+			background-position: 0 61.36364%
+		}
+
+		.lan-nas-1 {
+			background-position: 0 63.63636%
+		}
+
+		.lan-networking_device-0 {
+			background-position: 0 65.90909%
+		}
+
+		.lan-networking_device-1 {
+			background-position: 0 68.18182%
+		}
+
+		.lan-other-0 {
+			background-position: 0 70.45455%
+		}
+
+		.lan-other-1 {
+			background-position: 0 72.72727%
+		}
+
+		.lan-printer-0 {
+			background-position: 0 75%
+		}
+
+		.lan-printer-1 {
+			background-position: 0 77.27273%
+		}
+
+		.lan-smartphone-0 {
+			background-position: 0 79.54545%
+		}
+
+		.lan-smartphone-1 {
+			background-position: 0 81.81818%
+		}
+
+		.lan-tablet-0 {
+			background-position: 0 84.09091%
+		}
+
+		.lan-tablet-1 {
+			background-position: 0 86.36364%
+		}
+
+		.lan-television-0 {
+			background-position: 0 88.63636%
+		}
+
+		.lan-television-1 {
+			background-position: 0 90.90909%
+		}
+
+		.lan-vg_console-0 {
+			background-position: 0 93.18182%
+		}
+
+		.lan-vg_console-1 {
+			background-position: 0 95.45455%
+		}
+
+		.lan-workstation-0 {
+			background-position: 0 97.72727%
+		}
+
+		.lan-workstation-1 {
+			background-position: 0 100%
+		}
+	</style>
+	<div class="title #hide_name#">
+		<div class="cmdName">#name_display#</div>
+	</div>
+	<div class="content-sm">
+		<div class="lan-host-img" aria-label="#name#"></div>
+		<div class="lan-host-vendor ipv4">
+			<div class="ipv4"></div>
+			<div class="ipv6"></div>
+		</div>
+	</div>
+	<script>
+		jeedom.cmd.update['#id#'] = function (_options) {
+			jeedom.cmd.byId({
+				id: '#id#',
+				success: function (data) {
+					$('.cmd[data-cmd_id=#id#]').attr('title', 'Date de valeur : ' + _options.valueDate +
+						'<br/>Date de collecte : ' + _options.collectDate);
+					$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").text(data.configuration.IPV4);
+					$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv6").text(data.configuration.IPV6);
+					if (_options.display_value == '1') {
+						$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-host-1');
+						$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-' + data.configuration
+							.host_type + '-1');
+					} else {
+						$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-host-0');
+						$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-' + data.configuration
+							.host_type + '-0');
+					}
+
+					jeedom.eqLogic.byId({
+						id: data.eqLogic_id,
+						success: function (data2) {
+							if (data2.configuration == undefined) {
+								if (data2.result.configuration.IPV4 == 0) {
+									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass(
+										'hidden');
+								}
+
+								if (data2.result.configuration.IPV6 == 0) {
+									$(".cmd[data-cmd_id=#id#] .ipv6").addClass('hidden');
+								}
+							} else {
+								if (data2.configuration.IPV4 == 0) {
+									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass(
+										'hidden');
+								}
+
+								if (data2.configuration.IPV6 == 0) {
+									$(".cmd[data-cmd_id=#id#] .ipv6").addClass('hidden');
+								}
+							}
+						},
+					});
+				}
+			});
+
+
+		}
+		jeedom.cmd.update['#id#']({
+			display_value: '#state#',
+			valueDate: '#valueDate#',
+			collectDate: '#collectDate#',
+			alertLevel: '#alertLevel#'
+		});
+
+		$(".cmd[data-cmd_id=#id#]").off().on("click", function () {
+			$('#md_modal').dialog({
+				title: "Paramètres de l'appareil connecté",
+				height: 700,
+				width: 850
+			});
+			SelectEquipement = '#id#';
+			$('#md_modal').load('index.php?v=d&modal=outil.reseau&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
+		});
+	</script>
+</div>
