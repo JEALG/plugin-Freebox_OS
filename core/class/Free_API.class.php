@@ -253,7 +253,7 @@ class Free_API
                 log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . $content);
             }
             if ($errorno !== 0) {
-                return '[WARNING] ' . (__('Erreur de connexion cURL vers', __FILE__)) . ' ' . $this->serveur . $api_url . ': ' . $error;
+                return '[WARNING] ' . (__('Erreur de connexion cURL vers', __FILE__)) . ' ' . $this->serveur . $api_url . ' : ' . $error;
             } else {
                 $result = json_decode($content, true);
                 if ($result == null) return false;
@@ -303,6 +303,7 @@ class Free_API
             case "insufficient_rights":
             case "missing_right":
                 $msg_box1 = (__('Erreur Autorisation : Les autorisations de votre application ne vous permettent pas d\'accéder à cette API', __FILE__));
+                $msg_box10 = (__('TEST TRADUCTION', __FILE__));
                 break;
             case "auth_required":
                 $msg_box1 = (__('[Redémarrage session à cause de l\'erreur]', __FILE__));
