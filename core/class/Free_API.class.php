@@ -253,7 +253,7 @@ class Free_API
                 log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . $content);
             }
             if ($errorno !== 0) {
-                return '[WARNING] ' . (__('Erreur de connexion cURL vers', __FILE__)) . ' ' . $this->serveur . $api_url . ': ' . $error;
+                return '[WARNING] ' . (__('Erreur de connexion cURL vers', __FILE__)) . ' ' . $this->serveur . $api_url . ' : ' . $error;
             } else {
                 $result = json_decode($content, true);
                 if ($result == null) return false;
