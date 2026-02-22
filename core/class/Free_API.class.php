@@ -849,7 +849,7 @@ class Free_API
                     for ($k = 0; $k < $nb_call; $k++) {
                         $jour = $result['result'][$k]['datetime'];
                         $time = date('H:i', $result['result'][$k]['datetime']);
-                        if ($timestampToday <= $jour) {
+                        if ($timestampToday >= $jour) {
                             if ($result['result'][$k]['name'] == null) {
                                 $name = $result['result'][$k]['number'];
                             } else {
