@@ -913,7 +913,7 @@
         "Cliquer sur ? pour afficher l'assistant cron": "Click on ? to display the cron wizard",
         "Cliquer sur ? pour afficher l'assistant cron, Vide pas d'ajout": "Click on ? to display the cron wizard, Empty no addition",
         "Commandes": "Commands",
-        "Configuration": "Setup",
+        "Configuration": "Configuration",
         "Configuration avancée": "Advanced configuration",
         "Configuration de l'équipement": "Equipment configuration",
         "Debug Tiles": "Debug Tiles",
@@ -940,9 +940,9 @@
         "Rechercher": "Search",
         "Santé": "Health",
         "Sauvegarder": "Save",
-        "Scan contrôle parental": "Parental control scan",
-        "Scan tiles": "Scan tiles",
-        "Scan équipements standards": "Scan standard equipment",
+        "Scan - Contrôle parental": "Scan - Parental control",
+        "Scan - Tiles": "Scan - Tiles",
+        "Scan - équipements standards": "Scan - standard equipment",
         "Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget": "If checked, displays IPv4 or IPv6 on widget",
         "Supprimer": "Delete",
         "Type": "Type",
@@ -969,6 +969,7 @@
         "Mise à jour Plugin": "Plugin update",
         "Mise à jour des nouveautées + corrections des commandes": "News update + command corrections",
         "Mise à jour du paramétrage Plugin tiles": "Update settings Plugin tiles",
-        "Support Mode Éco-WiFi": "Eco-WiFi mode support"
+        "Support Mode Éco-WiFi": "Eco-WiFi mode support",
+        "Étape": "Step"
     }
 }

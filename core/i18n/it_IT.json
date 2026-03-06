@@ -940,9 +940,9 @@
         "Rechercher": "Ricercare",
         "Santé": "Salute",
         "Sauvegarder": "Sauvegarder",
-        "Scan contrôle parental": "Scansione del controllo parentale",
-        "Scan tiles": "Scansione delle piastrelle",
-        "Scan équipements standards": "Scansione di apparecchiature standard",
+        "Scan - Contrôle parental": "Scan - Controllo parentale",
+        "Scan - Tiles": "Scan - Piastrelle",
+        "Scan - équipements standards": "Scan - apparecchiature standard",
         "Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget": "Se la casella è selezionata, nel widget verrà visualizzato IPv4 o IPv6",
         "Supprimer": "Supprimer",
         "Type": "Tipo",
@@ -969,6 +969,7 @@
         "Mise à jour Plugin": "Aggiornamento dei plugin",
         "Mise à jour des nouveautées + corrections des commandes": "Aggiornamento dei nuovi prodotti + correzioni dei comandi",
         "Mise à jour du paramétrage Plugin tiles": "Aggiornamento delle impostazioni Tessere del plugin",
-        "Support Mode Éco-WiFi": "Supporto della modalità Eco-WiFi"
+        "Support Mode Éco-WiFi": "Supporto della modalità Eco-WiFi",
+        "Étape": "Passo"
     }
 }
