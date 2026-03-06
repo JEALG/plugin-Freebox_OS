@@ -84,7 +84,7 @@ function Freebox_OS_update()
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}*/
 
-		log::add('Freebox_OS', 'debug', '│ Etape 1/4 : ' . (__('Mise à jour des nouveautées + corrections des commandes', __FILE__)));
+		log::add('Freebox_OS', 'debug', '│ ' . (__('Étape', __FILE__)) . ' 1/4 : ' . (__('Mise à jour des nouveautées + corrections des commandes', __FILE__)));
 
 
 		log::add('Freebox_OS', 'debug', '[WARNING] - ' . (__('DEBUT DE NETTOYAGE LORS MIGRATION DE BOX', __FILE__)));
@@ -108,7 +108,7 @@ function Freebox_OS_update()
 		}
 		log::add('Freebox_OS', 'debug', '[  OK  ] - ' . (__('FIN DE NETTOYAGE LORS MIGRATION DE BOX', __FILE__)));
 
-		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : ' . (__('Changement de nom de certains équipements', __FILE__)));
+		log::add('Freebox_OS', 'debug', '│ ' . (__('Étape', __FILE__)) . ' 2/4 : ' . (__('Changement de nom de certains équipements', __FILE__)));
 		$eqLogics = eqLogic::byType($plugin->getId());
 		foreach ($eqLogics as $eqLogic) {
 			// Changement Id pour Wifi
@@ -130,7 +130,7 @@ function Freebox_OS_update()
 		}
 		$eq_version = '2.2';
 		Freebox_OS::updateLogicalID($eq_version, true);
-		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : ' . (__('Mise à jour du paramétrage Plugin tiles', __FILE__)));
+		log::add('Freebox_OS', 'debug', '│ ' . (__('Étape', __FILE__)) . ' 3/4 : ' . (__('Mise à jour du paramétrage Plugin tiles', __FILE__)));
 		if ($eq_version === '2') {
 			/* CRON GLOBAL TITLES
 			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
@@ -146,7 +146,7 @@ function Freebox_OS_update()
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
 			}*/
 		}
-		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : ' . (__('Création ou mise à jour des variables nécessaire pour le plugin', __FILE__)));
+		log::add('Freebox_OS', 'debug', '│ ' . (__('Étape', __FILE__)) . ' 4/4 : ' . (__('Création ou mise à jour des variables nécessaire pour le plugin', __FILE__)));
 		updateConfig();
 
 		//message::add('Freebox_OS', '{{Cette mise nécessite de lancer les divers Scans afin de bénéficier des nouveautés et surtout des correctifs}}');
