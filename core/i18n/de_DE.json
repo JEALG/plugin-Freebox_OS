@@ -940,9 +940,9 @@
         "Rechercher": "Suchen nach",
         "Santé": "Gesundheit",
         "Sauvegarder": "Zu schützen",
-        "Scan contrôle parental": "Scan elterliche Kontrolle",
-        "Scan tiles": "Scan tiles",
-        "Scan équipements standards": "Scan Standardausrüstung",
+        "Scan - Contrôle parental": "Scan – Kindersicherung",
+        "Scan - Tiles": "Scan – Kacheln",
+        "Scan - équipements standards": "Scan – Standardausstattung",
         "Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget": "Wenn das Kontrollkästchen aktiviert ist, werden IPv4 und IPv6 auf dem Widget angezeigt",
         "Supprimer": "Entfernen",
         "Type": "Typ",
@@ -969,6 +969,7 @@
         "Mise à jour Plugin": "Plugin-Update",
         "Mise à jour des nouveautées + corrections des commandes": "Aktualisierung von Neuheiten + Korrekturen von Befehlen",
         "Mise à jour du paramétrage Plugin tiles": "Aktualisierung der Einstellungen Plugin tiles",
-        "Support Mode Éco-WiFi": "Unterstützung Eco-WiFi-Modus"
+        "Support Mode Éco-WiFi": "Unterstützung Eco-WiFi-Modus",
+        "Étape": "Schritt"
     }
 }
