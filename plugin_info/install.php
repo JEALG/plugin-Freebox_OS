@@ -198,7 +198,7 @@ function updateLogicalId($eqLogic, $from, $to, $_historizeRound = null, $name = 
 			}
 			$Cmd->setUnite($unite);
 		}
-		$Cmd->save();
+		$Cmd->save(true);
 	}
 }
 function removeLogicId($cmdDel)
