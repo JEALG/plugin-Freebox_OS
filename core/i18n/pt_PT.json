@@ -50,6 +50,7 @@
         "Traitement de la Mise à jour de WebSocket": "Processamento da atualização WebSocket",
         "Type de requête": "Tipo de pedido",
         "Version API Non Défini Compatible avec la Freebox": "Versão da API Não definida Compatível com o Freebox",
+        "Vide": "Vazio",
         "[Message inconnue]": "[Mensagem desconhecida]",
         "[Redémarrage session Terminée à cause de l\\'erreur]": "[Reiniciar sessão Terminou devido a erro]",
         "[Redémarrage session à cause de l\\'erreur]": "[Reiniciar a sessão devido a um erro]",
@@ -940,9 +941,9 @@
         "Rechercher": "Pesquisar",
         "Santé": "Estado",
         "Sauvegarder": "Guardar",
-        "Scan contrôle parental": "Verificação do controlo parental",
-        "Scan tiles": "Digitalizar azulejos",
-        "Scan équipements standards": "Digitalizar equipamento padrão",
+        "Scan - Contrôle parental": "Scan - Controlo parental",
+        "Scan - Tiles": "Scan - Tiles",
+        "Scan - équipements standards": "Scan - equipamentos padrão",
         "Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget": "Se a caixa estiver assinalada, o widget apresentará IPv4 ou IPv6",
         "Supprimer": "Eliminar",
         "Type": "Tipo",
@@ -969,6 +970,7 @@
         "Mise à jour Plugin": "Atualização de plugins",
         "Mise à jour des nouveautées + corrections des commandes": "Atualização de novos produtos + correcções de comandos",
         "Mise à jour du paramétrage Plugin tiles": "Atualizar definições Mosaicos de plugins",
-        "Support Mode Éco-WiFi": "Suporte do modo Eco-WiFi"
+        "Support Mode Éco-WiFi": "Suporte do modo Eco-WiFi",
+        "Étape": "Degrau"
     }
 }

@@ -46,17 +46,17 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
 				<i class="fas fa-bullseye" title="{{Cette fonction permet de créer les commandes pour les équipements standards}}"></i>
 				<br />
-				<span>{{Scan équipements standards}}</span>
+				<span>{{Scan - équipements standards}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary" data-action="control_parental">
 				<i class="fas fa-user-shield" title="{{Cette fonction permet de créer les commandes pour le contrôle parental}}"></i>
 				<br>
-				<span>{{Scan contrôle parental}}</span>
+				<span>{{Scan - Contrôle parental}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary titleAction" data-action="tile">
 				<i class="fas fa-home" title="{{Cette fonction permet de créer les commandes pour la Domotique}}"></i>
 				<br>
-				<span>{{Scan tiles}}</span>
+				<span>{{Scan - Tiles}}</span>
 			</div>
 			<?php
 			if (log::getLogLevel('Freebox_OS') <= 200) :

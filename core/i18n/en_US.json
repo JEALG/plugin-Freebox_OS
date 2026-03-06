@@ -50,6 +50,7 @@
         "Traitement de la Mise à jour de WebSocket": "WebSocket update processing",
         "Type de requête": "Request type",
         "Version API Non Défini Compatible avec la Freebox": "API version Not defined Compatible with Freebox",
+        "Vide": "Empty",
         "[Message inconnue]": "[Message unknown]",
         "[Redémarrage session Terminée à cause de l\\'erreur]": "[Restart session Terminated due to error]",
         "[Redémarrage session à cause de l\\'erreur]": "[Session restart due to error]",
@@ -940,9 +941,9 @@
         "Rechercher": "Search",
         "Santé": "Health",
         "Sauvegarder": "Save",
-        "Scan contrôle parental": "Parental control scan",
-        "Scan tiles": "Scan tiles",
-        "Scan équipements standards": "Scan standard equipment",
+        "Scan - Contrôle parental": "Scan - Parental control",
+        "Scan - Tiles": "Scan - Tiles",
+        "Scan - équipements standards": "Scan - standard equipment",
         "Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget": "If checked, displays IPv4 or IPv6 on widget",
         "Supprimer": "Delete",
         "Type": "Type",
@@ -969,6 +970,7 @@
         "Mise à jour Plugin": "Plugin update",
         "Mise à jour des nouveautées + corrections des commandes": "News update + command corrections",
         "Mise à jour du paramétrage Plugin tiles": "Update settings Plugin tiles",
-        "Support Mode Éco-WiFi": "Eco-WiFi mode support"
+        "Support Mode Éco-WiFi": "Eco-WiFi mode support",
+        "Étape": "Step"
     }
 }
