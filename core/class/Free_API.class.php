@@ -977,7 +977,8 @@ class Free_API
                 }
                 $return = array('blacklist' => $blacklist, 'whitelist' => $whitelist);
             } else {
-                $return = array('blacklist' => 'vide', 'whitelist' => 'vide');
+                $empty = __('Vide', __FILE__);
+                $return = array('blacklist' => $empty, 'whitelist' => $empty);
             }
             return $return;
         } else {
