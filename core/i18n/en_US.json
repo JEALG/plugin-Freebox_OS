@@ -424,12 +424,16 @@
         "Volume": "Volume"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTil.class.php": {
+        "Ajout commande spécifique pour": "Add specific command for",
         "Création de la caméra": "Camera creation",
         "Création équipement": "Equipment creation",
         "Début de création des commandes pour": "Start creating commands for",
+        "Fin ajout commande spécifique pour": "End of specific command addition for",
+        "Réglage pour la commande de type": "Setting for the control type",
         "Votre Box ne prend pas en charge cette fonctionnalité de ": "Your Box does not support this feature",
         "Votre Box prend en charge cette fonctionnalité de": "Your Box supports this feature from",
-        "merci de relancer le scan": "please restart the scan"
+        "merci de relancer le scan": "please restart the scan",
+        "pour": "for"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " 4G connection - xDSL \/ lte",
