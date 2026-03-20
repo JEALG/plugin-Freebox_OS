@@ -480,7 +480,6 @@ class Free_Refresh
         $log_Erreur = (__('AUCUN APPEL', __FILE__));
         $list = 'missed,listmissed,missed_new,listmissed_new,accepted,listaccepted,accepted_new,listaccepted_new,outgoing,listoutgoing';
         $result = $Free_API->nb_appel_absence();
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . $result['missed_new'] . ' ::/fg: ');
         $para_resultPH = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultPH, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
     }
