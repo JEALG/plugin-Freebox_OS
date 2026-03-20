@@ -250,7 +250,7 @@ class Free_API
                 $Type_log['log_result'] = true;
             }
             if ($Type_log['log_result'] != false) {
-                log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . $content);
+                log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . str_replace(["\r", "\n"], "", $content));
             }
             if ($errorno !== 0) {
                 return '[WARNING] ' . (__('Erreur de connexion cURL vers', __FILE__)) . ' ' . $this->serveur . $api_url . ' : ' . $error;
@@ -593,7 +593,7 @@ class Free_API
                 default:
                     if ($config_log != null && $id != null && $id != '/all') {
                         if ($log_request == true) {
-                            log::add('Freebox_OS', 'debug', '───▶︎ ' . $config_log . ' : ' . $id);
+                            log::add('Freebox_OS', 'debug', '───▶︎:fg-info: ' . $config_log . ' ::/fg: ' . $id);
                         }
                     }
                     if (isset($result['result'])) {
@@ -608,7 +608,6 @@ class Free_API
                     }
                     break;
             }
-
 
             return $value;
         } else {
@@ -834,7 +833,7 @@ class Free_API
         if (isset($result['success'])) {
             if ($result['success']) {
                 $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-
+                log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: timestamp - Jour ::/fg: ' . $timestampToday);
                 if (isset($result['result'])) {
                     $nb_call = count($result['result']);
                     // Outgoing
@@ -849,7 +848,8 @@ class Free_API
                     for ($k = 0; $k < $nb_call; $k++) {
                         $jour = $result['result'][$k]['datetime'];
                         $time = date('H:i', $result['result'][$k]['datetime']);
-                        if ($timestampToday >= $jour) {
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: timestamp - Appel ::/fg: ' . $jour);
+                        if ($jour >= $timestampToday) {
                             if ($result['result'][$k]['name'] == null) {
                                 $name = $result['result'][$k]['number'];
                             } else {
@@ -857,7 +857,7 @@ class Free_API
                             }
 
                             if ($result['result'][$k]['type'] == 'missed') {
-                                if ($result['result'][$k]['new'] == true) {
+                                if ($result['result'][$k]['new'] === true) {
                                     // Uniquement les nouveaux appels
                                     $cptAppel_missed_new++;
                                     if ($listNumber_missed_new === '') {

@@ -480,6 +480,7 @@ class Free_Refresh
         $log_Erreur = (__('AUCUN APPEL', __FILE__));
         $list = 'missed,listmissed,missed_new,listmissed_new,accepted,listaccepted,accepted_new,listaccepted_new,outgoing,listoutgoing';
         $result = $Free_API->nb_appel_absence();
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . $result['missed_new'] . ' ::/fg: ');
         $para_resultPH = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultPH, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
     }
@@ -843,7 +844,7 @@ class Free_Refresh
                     break;
             }
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Mise à jour commande spécifique pour Homebridge', __FILE__)) . ' : ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
+                log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour commande spécifique pour Homebridge', __FILE__)) . ' ::/fg: ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
             }
             $EqLogic->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
             $EqLogic->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
@@ -861,7 +862,7 @@ class Free_Refresh
                 if ($data['value'] == null) {
                     $_value = 'Pas de message d\'erreur';
                     if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Mise à jour commande spécifique Message erreur', __FILE__)) . ' : '  . $EqLogic->getConfiguration('type') . ' -- ' . $data['value']);
+                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour commande spécifique Message erreur', __FILE__)) . ' ::/fg: '  . $EqLogic->getConfiguration('type') . ' -- ' . $data['value']);
                     }
                 }
             } else {
@@ -971,13 +972,13 @@ class Free_Refresh
         }
         if ($Cmd->getConfiguration('history_remote') == $timestamp) {
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Pas de changement de la valeur de la télécommande', __FILE__)));
+                log::add('Freebox_OS', 'debug', '───▶︎ :fg-info:' . (__('Pas de changement de la valeur de la télécommande', __FILE__)) . ':/fg:');
             }
         } else {
             $Cmd->setConfiguration('history_remote', $timestamp);
             $Cmd->save();
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Changement de la valeur nécessaire pour la télécommande', __FILE__)));
+                log::add('Freebox_OS', 'debug', '───▶︎ :fg-info:' . (__('Changement de la valeur nécessaire pour la télécommande', __FILE__)) . ':/fg:');
             }
             $EqLogic->checkAndUpdateCmd($Cmd, $_value);
         }
@@ -1033,28 +1034,32 @@ class Free_Refresh
             }
         }
         if ($EqLogics->getConfiguration('type2') == 'pir' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'dws' || $EqLogics->getConfiguration('type') == 'camera' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'kfb' || $EqLogics->getConfiguration('type2') == 'shutter' || $EqLogics->getConfiguration('type2') == 'basic_shutter') {
-            Free_Refresh::refresh_titles_nodes($EqLogics, $Free_API, $data['ep_id'], $log_result, $cmd);
+            if (isset($data['ep_id'])) {
+                Free_Refresh::refresh_titles_nodes($EqLogics, $Free_API, $data['ep_id'], $log_result, $cmd);
+            }
         }
     }
     private static function refresh_titles_nodes($EqLogics, $Free_API, $ep_id, $log_result, $Cmd)
     {
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $EqLogics->getLogicalId(), true, true, FALSE);
-        foreach ($result['show_endpoints'] as $Cmd) {
-            foreach ($EqLogics->getCmd('info') as $Command) {
-                if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
-                    if ($Command->getConfiguration('info') == 'mouv_sensor') {
-                        $_value = false;
-                        if ($Cmd['value'] == false) {
-                            $_value = true;
+        if ($result != false || $result != NULL) {
+            foreach ($result['show_endpoints'] as $Cmd) {
+                foreach ($EqLogics->getCmd('info') as $Command) {
+                    if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
+                        if ($Command->getConfiguration('info') == 'mouv_sensor') {
+                            $_value = false;
+                            if ($Cmd['value'] == false) {
+                                $_value = true;
+                            }
+                        } else {
+                            $_value = $Cmd['value'];
+                            if ($Cmd['name'] == 'battery') {
+                                $EqLogics->batteryStatus($_value);
+                            }
                         }
-                    } else {
-                        $_value = $Cmd['value'];
-                        if ($Cmd['name'] == 'battery') {
-                            $EqLogics->batteryStatus($_value);
-                        }
+                        $EqLogics->checkAndUpdateCmd($Cmd['id'], $_value);
+                        break;
                     }
-                    $EqLogics->checkAndUpdateCmd($Cmd['id'], $_value);
-                    break;
                 }
             }
         }
