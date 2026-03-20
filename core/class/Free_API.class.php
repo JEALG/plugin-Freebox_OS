@@ -848,7 +848,7 @@ class Free_API
                     for ($k = 0; $k < $nb_call; $k++) {
                         $jour = $result['result'][$k]['datetime'];
                         $time = date('H:i', $result['result'][$k]['datetime']);
-                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: timestamp - Appel ::/fg: ' . $jour);
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: timestamp - Appel (ID= ' . $result['result'][$k]['id'] . ')::/fg: ' . $jour);
                         if ($jour >= $timestampToday) {
                             if ($result['result'][$k]['name'] == null) {
                                 $name = $result['result'][$k]['number'];
