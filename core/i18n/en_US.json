@@ -11,6 +11,8 @@
         "Aucun module 4G détecté": "No 4G module detected",
         "Aucune donnée": "No data",
         "Code Erreur": "Error code",
+        "Date et heure d\\'appel avec l\\'ID": "Date and time of call with ID",
+        "Date et heure du jour": "Current date and time",
         "Erreur : Le Token que vous essayez d\\'utiliser est non valide ou a été révoqué": "Error: The token you are trying to use is invalid or has been revoked",
         "Erreur : Le Token que vous essayez d\\'utiliser n\\'a pas encore été validé par l\\'utilisateur": "Error: The token you are trying to use has not yet been validated by the user",
         "Erreur AUTRE": "Error OTHER",
@@ -56,6 +58,7 @@
         "[Redémarrage session à cause de l\\'erreur]": "[Session restart due to error]",
         "action": "action",
         "avec la valeur": "with the value",
+        "cet appel est exclu de la liste": "This call is excluded from the list",
         "de": "of",
         "ou session déjà fermée": "or session already closed",
         "sur la l\\'adresse": "on the address",
@@ -424,12 +427,16 @@
         "Volume": "Volume"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTil.class.php": {
+        "Ajout commande spécifique pour": "Add specific command for",
         "Création de la caméra": "Camera creation",
         "Création équipement": "Equipment creation",
         "Début de création des commandes pour": "Start creating commands for",
+        "Fin ajout commande spécifique pour": "End of specific command addition for",
+        "Réglage pour la commande de type": "Setting for the control type",
         "Votre Box ne prend pas en charge cette fonctionnalité de ": "Your Box does not support this feature",
         "Votre Box prend en charge cette fonctionnalité de": "Your Box supports this feature from",
-        "merci de relancer le scan": "please restart the scan"
+        "merci de relancer le scan": "please restart the scan",
+        "pour": "for"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " 4G connection - xDSL \/ lte",

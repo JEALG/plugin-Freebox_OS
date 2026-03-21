@@ -610,11 +610,13 @@ class Freebox_OS extends eqLogic
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('SetModePresent', "NOT");
 				$this->setConfiguration('ModeAbsent', $Name);
-				log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge', __FILE__)) . ' Set Mode : SetModePresent => NOT' . ' -- ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '| :fg-info:───▶︎ ' . (__('Paramétrage du Mode Homebridge', __FILE__)) . ' Set Mode ::/fg: SetModePresent => NOT' . ' -- ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
+				//log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge', __FILE__)) . ' Set Mode : SetModePresent => NOT' . ' -- ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'SetModeNuit') {
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('ModeNuit', $Name);
-				log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '| :fg-info:───▶︎ ' . (__('Paramétrage du Mode Homebridge', __FILE__)) . ' Set Mode ::/fg: SetModePresent => NOT' . ' -- ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
+				//log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
 				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core

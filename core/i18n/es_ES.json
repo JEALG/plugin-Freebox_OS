@@ -11,6 +11,8 @@
         "Aucun module 4G détecté": "No se detecta módulo 4G",
         "Aucune donnée": "Sin datos",
         "Code Erreur": "Código de error",
+        "Date et heure d\\'appel avec l\\'ID": "Fecha y hora de la llamada con el ID",
+        "Date et heure du jour": "Fecha y hora de hoy",
         "Erreur : Le Token que vous essayez d\\'utiliser est non valide ou a été révoqué": "Error : El token que intenta utilizar no es válido o ha sido revocado",
         "Erreur : Le Token que vous essayez d\\'utiliser n\\'a pas encore été validé par l\\'utilisateur": "Error : El token que intenta utilizar aún no ha sido validado por el usuario",
         "Erreur AUTRE": "Error OTROS",
@@ -56,6 +58,7 @@
         "[Redémarrage session à cause de l\\'erreur]": "[Reiniciar sesión por error]",
         "action": "acción",
         "avec la valeur": "con el valor",
+        "cet appel est exclu de la liste": "esta llamada no figura en la lista",
         "de": "de",
         "ou session déjà fermée": "o sesión ya cerrada",
         "sur la l\\'adresse": "en la dirección",
@@ -424,12 +427,16 @@
         "Volume": "Volumen"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTil.class.php": {
+        "Ajout commande spécifique pour": "Añadir comando específico para",
         "Création de la caméra": "Creación de la cámara",
         "Création équipement": "Creación de equipos",
         "Début de création des commandes pour": "Comience a crear comandos para",
+        "Fin ajout commande spécifique pour": "Fin de la adición de un pedido específico para",
+        "Réglage pour la commande de type": "Ajuste para el tipo de control",
         "Votre Box ne prend pas en charge cette fonctionnalité de ": "Tu Box no es compatible con esta función",
         "Votre Box prend en charge cette fonctionnalité de": "Tu Box es compatible con esta función de",
-        "merci de relancer le scan": "por favor, reinicie el escaneo"
+        "merci de relancer le scan": "por favor, reinicie el escaneo",
+        "pour": "para"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " Conexión 4G - xDSL \/ lte",

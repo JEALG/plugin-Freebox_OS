@@ -375,7 +375,7 @@ class Free_CreateTil
 
                             if (!is_object($Tile)) continue;
                             $command['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Command['label']);
-                            log::add('Freebox_OS', 'debug', '| ───▶︎ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name'] . ' -- Type (eq) : ' . $_eq_type . ' -- Action (eq): ' . $_eq_action . ' -- Index : ' . $_cmd_ep_id . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
+                            log::add('Freebox_OS', 'debug', '| :fg-info:───▶︎ Label ::/fg: ' . $Command['label'] . ' :fg-info:-- Name ::/fg: ' . $Command['name'] . ' :fg-info:-- Type (eq) ::/fg: ' . $_eq_type . ' :fg-info:-- Action (eq)::/fg: ' . $_eq_action . ' :fg-info:-- Index ::/fg: ' . $_cmd_ep_id . ' :fg-info:-- Value Type ::/fg: ' . $Command['value_type'] . ' :fg-info:-- Access ::/fg: ' . $Command['ui']['access']);
                             if (isset($Command['ui']['unit'])) {
                                 $_unit = $Command['ui']['unit'];
                             } else {
@@ -436,7 +436,7 @@ class Free_CreateTil
                                         }
 
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
-                                            log::add('Freebox_OS', 'debug', '| ───▶︎ Range Icon ' . $setting['Search']);
+                                            log::add('Freebox_OS', 'debug', '|:fg-info: ───▶︎ ' . (__('Réglage pour la commande de type', __FILE__)) . ':/fg::fg-warning: Range Icon :/fg::fg-info:' . (__('pour', __FILE__)) . '::/fg: ' . $setting['Search']);
                                             if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
                                                 $order = $setting['Order'];
                                                 $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, $setting['Repeatevent'], null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
@@ -578,12 +578,12 @@ class Free_CreateTil
                                             $info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', 'string', $setting['Templatecore'], $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', 'default', 0, $setting['Icon_I'], 0, 'default', 'default', $setting['Order'], 0, false, true, null, true, null, null, null, null, null, null, $eq_group);
                                             $Link_I_ALARM = $info;
                                             if ($Command['name'] == "state" && $_eq_type == 'alarm_control') {
-                                                log::add('Freebox_OS', 'debug', '|┌──:Ajout commande spécifique pour Homebridge :/fg:──');
+                                                log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('Ajout commande spécifique pour', __FILE__)) . ':/fg::fg-success: Homebridge :/fg:');
                                                 $ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $_cmd_ep_id, 0, null, 0, 'default', 'default', 1, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
                                                 $Link_I_ALARM_ENABLE = $ALARM_ENABLE;
                                                 $Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $_cmd_ep_id, 1, null, 0, 'default', 'default',  2, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
                                                 $Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 0, 0, $_cmd_ep_id, 0, null, 0, 'default', 'default', 3, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
-                                                log::add('Freebox_OS', 'debug', '|└────────────────────');
+                                                log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('Fin ajout commande spécifique pour', __FILE__)) . ':/fg::fg-success: Homebridge :/fg:');
                                             }
 
                                             if ($Command['ui']['access'] === 'rw') {
@@ -660,7 +660,7 @@ class Free_CreateTil
             $Label_O = str_replace("État", "Etat", $Label_O);
         }
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '| ───▶︎ Setting STRING pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '|:fg-info: ───▶︎ ' . (__('Réglage pour la commande de type', __FILE__)) . ':/fg::fg-warning: STRING :/fg::fg-info:' . (__('pour', __FILE__)) . '::/fg: ' . $Search);
         $IsVisible = 1;
         $IsVisible_I = 1;
         $Templatecore = null;
@@ -767,7 +767,7 @@ class Free_CreateTil
         $_Cmd_ep_id2 = null;
         $TypeCMD_BOOL = 'null';
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '| ───▶︎ Setting VOID pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '|:fg-info: ───▶︎ ' . (__('Réglage pour la commande de type', __FILE__)) . ':/fg::fg-warning: VOID :/fg::fg-info:' . (__('pour', __FILE__)) . '::/fg: ' . $Search);
 
         switch ($Search) {
             case 'shutter_toggle_w_nodes':
@@ -887,7 +887,7 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '| ───▶︎ Setting INT pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '|:fg-info: ───▶︎ ' . (__('Réglage pour la commande de type', __FILE__)) . ':/fg::fg-warning: INT :/fg::fg-info:' . (__('pour', __FILE__)) . '::/fg: ' . $Search);
 
         $Generic_type = null;
         $Generic_type_I = null;
@@ -1135,7 +1135,7 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '| ───▶︎ Setting BOOL pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '|:fg-info: ───▶︎ ' . (__('Réglage pour la commande de type', __FILE__)) . ':/fg::fg-warning: BOOL :/fg::fg-info:' . (__('pour', __FILE__)) . '::/fg: ' . $Search);
 
         // Reset Template
         $TemplatecoreON = null;

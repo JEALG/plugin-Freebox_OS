@@ -11,6 +11,8 @@
         "Aucun module 4G détecté": "Kein 4G-Modul erkannt",
         "Aucune donnée": "Keine Daten",
         "Code Erreur": "Fehlercode",
+        "Date et heure d\\'appel avec l\\'ID": "Datum und Uhrzeit des Anrufs mit der ID",
+        "Date et heure du jour": "Aktuelles Datum und Uhrzeit",
         "Erreur : Le Token que vous essayez d\\'utiliser est non valide ou a été révoqué": "Fehler: Das Token, das Sie zu verwenden versuchen, ist ungültig oder wurde widerrufen",
         "Erreur : Le Token que vous essayez d\\'utiliser n\\'a pas encore été validé par l\\'utilisateur": "Fehler: Das Token, das Sie zu verwenden versuchen, wurde noch nicht vom Benutzer validiert",
         "Erreur AUTRE": "Fehler ANDERE",
@@ -56,6 +58,7 @@
         "[Redémarrage session à cause de l\\'erreur]": "[Neustart der Sitzung wegen Fehler]",
         "action": "aktion",
         "avec la valeur": "mit dem Wert",
+        "cet appel est exclu de la liste": "Dieser Anruf ist von der Liste ausgeschlossen",
         "de": "von",
         "ou session déjà fermée": "oder bereits geschlossene Sitzung",
         "sur la l\\'adresse": "auf der Adresse",
@@ -424,12 +427,16 @@
         "Volume": "Lautstärke"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTil.class.php": {
+        "Ajout commande spécifique pour": "Hinzufügen einer spezifischen Steuerung für",
         "Création de la caméra": "Erstellung der Kamera",
         "Création équipement": "Ausstattung",
         "Début de création des commandes pour": "Beginn der Erstellung von Aufträgen für",
+        "Fin ajout commande spécifique pour": "Ende der spezifischen Bestellung für",
+        "Réglage pour la commande de type": "Einstellung für die Steuerungstyp",
         "Votre Box ne prend pas en charge cette fonctionnalité de ": "Ihre Box unterstützt diese Funktion nicht",
         "Votre Box prend en charge cette fonctionnalité de": "Ihre Box unterstützt diese Funktion von",
-        "merci de relancer le scan": "bitte starten Sie den Scan erneut"
+        "merci de relancer le scan": "bitte starten Sie den Scan erneut",
+        "pour": "für"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " 4G-Verbindung - xDSL \/ lte",

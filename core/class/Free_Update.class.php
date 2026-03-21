@@ -413,7 +413,7 @@ class Free_Update
                                 $result_network = $result['result'];
                                 foreach ($result_network as $result) {
                                     if ($result['id'] == $host_value_mac_ID) {
-                                        log::add('Freebox_OS', 'debug', ':fg-sucess:'  . (__('Equipement avec déjà un paramètrage IP', __FILE__)) . ' ::/fg: ' . $result['mac']);
+                                        log::add('Freebox_OS', 'debug', ':fg-success:'  . (__('Equipement avec déjà un paramètrage IP', __FILE__)) . ' ::/fg: ' . $result['mac']);
                                         if ($method_value == 'POST' && $method_value != 'DELETE') {
                                             $method_value = 'PUT';
                                         }
