@@ -833,7 +833,9 @@ class Free_API
         if (isset($result['success'])) {
             if ($result['success']) {
                 $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-                log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: timestamp - Jour ::/fg: ' . $timestampToday);
+                $dateToday = date('d/m/Y', $timestampToday);
+                $timeToday = date('H:i', $timestampToday);
+                log::add('Freebox_OS', 'debug', '──────────▶︎:fg-success: ' . (__('Date et heure du jour', __FILE__)) . ' ::/fg: ' . $dateToday . ' ' . $timeToday    . ' (' . $timestampToday . ')');
                 if (isset($result['result'])) {
                     $nb_call = count($result['result']);
                     // Outgoing
@@ -847,9 +849,11 @@ class Free_API
                     $cptAppel_accepted_new = 0;
                     for ($k = 0; $k < $nb_call; $k++) {
                         $jour = $result['result'][$k]['datetime'];
+                        $date = date('d/m/Y', $jour);
                         $time = date('H:i', $result['result'][$k]['datetime']);
-                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: timestamp - Appel (ID= ' . $result['result'][$k]['id'] . ')::/fg: ' . $jour);
+
                         if ($jour >= $timestampToday) {
+                            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure d\'appel avec l\'ID', __FILE__)) . ' ' . $result['result'][$k]['id'] . ')::/fg: ' . $date . ' ' . $time  . ' ('  . $jour . ')');
                             if ($result['result'][$k]['name'] == null) {
                                 $name = $result['result'][$k]['number'];
                             } else {
@@ -902,6 +906,12 @@ class Free_API
                                 $cptAppel_outgoing++;
                                 if ($result['result'][$k]['new'] == true) {
                                     $cptAppel_outgoing_new++;
+                                    if ($listNumber_outgoing_new === '') {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_outgoing_new .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                                 }
                                 if ($listNumber_outgoing === '') {
                                     $newligne = null;
@@ -910,9 +920,11 @@ class Free_API
                                 }
                                 $listNumber_outgoing .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                             }
+                        } else {
+                            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure d\'appel avec l\'ID', __FILE__)) . ' ' . $result['result'][$k]['id'] . ')::/fg: ' . $date . ' ' . $time . ' ('  . $jour . ')' . ' :fg-warning:' . (__('cet appel est exclu de la liste', __FILE__)) . ':/fg:');
                         }
                     }
-                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'missed_new' => $cptAppel_missed_new, 'listmissed_new' => $listNumber_missed_new, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'accepted_new' => $cptAppel_accepted_new, 'listaccepted_new' => $listNumber_accepted_new, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
+                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'missed_new' => $cptAppel_missed_new, 'listmissed_new' => $listNumber_missed_new, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'accepted_new' => $cptAppel_accepted_new, 'listaccepted_new' => $listNumber_accepted_new, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing, 'listoutgoing_new' => $listNumber_outgoing_new,);
                 }
                 return $retourFbx;
             } else {
