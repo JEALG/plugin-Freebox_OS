@@ -772,6 +772,31 @@ class Free_Update
             case "phone_read_call":
                 $Free_API->universal_put(null, 'universal_put', null, null, 'call/log/mark_all_as_read', 'POST', null);
                 break;
+            case "voicemail_dell":
+                $result = $Free_API->universal_get('universalAPI', null, null, 'call/voicemail', true, true, true);
+                if (isset($result['success'])) {
+                    if (isset($result['result'])) {
+                        $cptAppel_Voicemail_nb = count($result['result']);
+                        for ($k = 0; $k < $cptAppel_Voicemail_nb; $k++) {
+                            $Free_API->universal_put(null, 'universal_put', $result['result'][$k]['id'], null, 'call/voicemail/', 'DELETE', null);
+                        }
+                    }
+                }
+            case 'voicemail_call':
+                $result = $Free_API->universal_get('universalAPI', null, null, 'call/voicemail', true, true, true);
+                if (isset($result['success'])) {
+                    if (isset($result['result'])) {
+                        $cptAppel_Voicemail_nb = count($result['result']);
+                        for ($k = 0; $k < $cptAppel_Voicemail_nb; $k++) {
+                            $option = array(
+                                'read' => true,
+                            );
+                            $Free_API->universal_put(1, 'universal_put', $result['result'][$k]['id'], null, 'call/voicemail/', 'PUT', $option);
+                        }
+                    }
+                }
+
+                break;
         }
     }
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
