@@ -482,6 +482,12 @@ class Free_Refresh
         $result = $Free_API->nb_appel_absence();
         $para_resultPH = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultPH, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+
+        $log_Erreur = (__('AUCUN MESSAGE VOCAL', __FILE__));
+        $list = 'voicemail_nb,voicemail_list,voicemail_list_new';
+        $result = $Free_API->nb_voicemail();
+        $para_resultPH = array('nb' => 0, 1 => null, 2 => null, 3 => null);
+        Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultPH, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
     }
     private static function refresh_network_global($EqLogics, $Free_API, $_network = 'LAN')
     {

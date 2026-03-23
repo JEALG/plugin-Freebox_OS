@@ -676,6 +676,8 @@ class Free_CreateEq
         $iconoutgoing = 'icon techno-phone2 icon_green';
         $iconDell_call = 'fas fa-magic icon_red';
         $iconRead_call = 'fab fa-readme icon_blue';
+        $iconvoicemail = 'fas fa-voicemail icon_blue';
+        $iconvoicemaillist = 'fas fa-voicemail icon_green';
         $updateicon = false;
 
         $phone = Freebox_OS::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null, null, '*/30 * * * *', null, null, 'system', true);
@@ -691,6 +693,12 @@ class Free_CreateEq
         $phone->AddCommand(__('Liste Emis', __FILE__), 'listoutgoing', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconoutgoing, 1, 'default', 'default',  $order++, '0', $updateicon, true, false, null, null, null, null, 'NONAME');
         $phone->AddCommand(__('Vider le journal d appels', __FILE__), 'phone_dell_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconDell_call, 1, 'default', 'default', $order++, '0', $updateicon, false, null, true);
         $phone->AddCommand(__('Tout marquer comme lu', __FILE__), 'phone_read_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconRead_call, 0, 'default', 'default', $order++, '0', $updateicon, false, null, true);
+
+        $phone->AddCommand(__('Nb de message vocal', __FILE__), 'voicemail_nb', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconvoicemail, 1, 'default', 'default',  $order++, '0', $updateicon, true, false, true, null, null, null, null);
+        $phone->AddCommand(__('Liste des messages vocaux', __FILE__), 'voicemail_list', 'info', 'string', null, null, null, 0, 'default', 'default', 0, $iconvoicemaillist, 1, 'default', 'default',  $order++, '0', $updateicon, true, false, null, null, null, null, 'NONAME');
+        $phone->AddCommand(__('Liste des messages vocaux (nouveau)', __FILE__), 'voicemail_list_new', 'info', 'string', null, null, null, 0, 'default', 'default', 0, $iconvoicemaillist, 1, 'default', 'default',  $order++, '0', $updateicon, true, false, null, null, null, null, 'NONAME');
+        $phone->AddCommand(__('Effacer tous les messages vocaux', __FILE__), 'voicemail_dell', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconDell_call, 1, 'default', 'default', $order++, '0', $updateicon, false, null, true);
+        $phone->AddCommand(__('Marquer tous les messages vocaux comme lu', __FILE__), 'voicemail_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconRead_call, 0, 'default', 'default', $order++, '0', $updateicon, false, null, true);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 

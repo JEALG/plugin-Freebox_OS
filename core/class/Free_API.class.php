@@ -924,7 +924,7 @@ class Free_API
                             log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure d\'appel avec l\'ID', __FILE__)) . ' ' . $result['result'][$k]['id'] . ')::/fg: ' . $date . ' ' . $time . ' ('  . $jour . ')' . ' :fg-warning:' . (__('cet appel est exclu de la liste', __FILE__)) . ':/fg:');
                         }
                     }
-                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'missed_new' => $cptAppel_missed_new, 'listmissed_new' => $listNumber_missed_new, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'accepted_new' => $cptAppel_accepted_new, 'listaccepted_new' => $listNumber_accepted_new, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing, 'listoutgoing_new' => $listNumber_outgoing_new,);
+                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'missed_new' => $cptAppel_missed_new, 'listmissed_new' => $listNumber_missed_new, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'accepted_new' => $cptAppel_accepted_new, 'listaccepted_new' => $listNumber_accepted_new, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing, 'listoutgoing_new' => $listNumber_outgoing_new);
                 }
                 return $retourFbx;
             } else {
@@ -932,6 +932,61 @@ class Free_API
             }
         } else {
             log::add('Freebox_OS', 'debug', ':fg-warning:───▶︎ ' .  (__('AUCUN APPEL', __FILE__))  .  ':/fg:');
+            return $retourFbx;
+        }
+    }
+    public function nb_voicemail()
+    {
+        //VoiceMail
+        $cptAppel_Voicemail_nb = 0;
+        $voicemail_list = '';
+        $voicemail_list_new = '';
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('universalAPI', null, null, 'call/voicemail', true, true, true);
+        $retourFbx = array('voicemail_nb' => 0, 'voicemail_list' => "", 'voicemail_list_new' => "");
+        if ($result === false) {
+            return false;
+        }
+        if (isset($result['success'])) {
+            if ($result['success']) {
+                $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+                $dateToday = date('d/m/Y', $timestampToday);
+                $timeToday = date('H:i', $timestampToday);
+                log::add('Freebox_OS', 'debug', '──────────▶︎:fg-success: ' . (__('Date et heure du jour', __FILE__)) . ' ::/fg: ' . $dateToday . ' ' . $timeToday    . ' (' . $timestampToday . ')');
+                if (isset($result['result'])) {
+                    $cptAppel_Voicemail_nb = count($result['result']);
+                    for ($k = 0; $k < $cptAppel_Voicemail_nb; $k++) {
+                        $jour = $result['result'][$k]['date'];
+                        $date = date('d/m/Y', $jour);
+                        $time = date('H:i', $result['result'][$k]['date']);
+                        $name = "+" . $result['result'][$k]['country_code'] . $result['result'][$k]['phone_number'];
+                        //log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure du message vocal', __FILE__)) . ':/fg: :fg-warning:' . $result['result'][$k]['id'] . ')::/fg: ' . $date . ' ' . $time  . ' ('  . $jour . ')');
+                        if ($result['result'][$k]['read'] === false) {
+                            if ($voicemail_list_new === '') {
+                                $newligne = null;
+                            } else {
+                                $newligne = '<br>';
+                            }
+                            $voicemail_list_new .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
+                            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure du message vocal non lu', __FILE__)) . ':/fg: :fg-warning:' . $name . $result['result'][$k]['id'] . ')::/fg: ' . $date . ' ' . $time  . ' ('  . $jour . ')');
+                        }
+                        if ($voicemail_list === '') {
+                            $newligne = null;
+                        } else {
+                            $newligne = '<br>';
+                        }
+                        $voicemail_list .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure du message vocal', __FILE__)) . ':/fg: :fg-warning:' . $name . $result['result'][$k]['id'] . ')::/fg: ' . $date . ' ' . $time  . ' ('  . $jour . ')');
+                    }
+                }
+
+                $retourFbx = array('voicemail_nb' => $cptAppel_Voicemail_nb, 'voicemail_list' => $voicemail_list, 'voicemail_list_new' => $voicemail_list_new);
+                return $retourFbx;
+            } else {
+                return false;
+            }
+        } else {
+            log::add('Freebox_OS', 'debug', ':fg-warning:───▶︎ ' .  (__('AUCUN MESSAGE VOCAL', __FILE__))  .  ':/fg:');
             return $retourFbx;
         }
     }
