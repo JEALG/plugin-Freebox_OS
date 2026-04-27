@@ -1378,7 +1378,7 @@ class Free_Refresh
                                 }
                             }
                             $EqLogics->checkAndUpdateCmd($fielLogicalId, $value);
-                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $value . ' ' . $Cmd->getUnite());
+                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . str_replace(["\r", "\n"], "", $value) . ' ' . $Cmd->getUnite());
 
                             if ($para_Config != null) { // Mise à jour des paramétres Config
                                 if (isset($para_Config[$fieldname])) {
