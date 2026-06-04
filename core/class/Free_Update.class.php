@@ -921,7 +921,7 @@ class Free_Update
 
                 $action = $logicalId_eq->getConfiguration('action');
                 $type = $logicalId_eq->getConfiguration('type');
-                log::add('Freebox_OS', 'debug', '│ :fg-success:' . (__('Type', __FILE__)) . ' ::/fg: ' . $type . ' -- :fg-success:' . (__('Action', __FILE__)) . ' ::/fg: ' . $action . ' -- :fg-success:' . (__('Valeur type', __FILE__)) . ' ::/fg: ' . $parametre['value_type'] . ' -- :fg-success:' . (__('Etat Option Inverser', __FILE__)) . '  ::/fg: ' . $_cmd->getConfiguration('invertslide') . ' -- :fg-success:' . (__('Valeur', __FILE__)) . '  ::/fg: ' . $parametre['value'] . ' -- :fg-success:' . (__('Valeur slider', __FILE__)) . ' ::/fg: ' . $_options['slider']);
+                log::add('Freebox_OS', 'debug', '───▶︎ :fg-success:' . (__('Type', __FILE__)) . ' ::/fg: ' . $type . ' -- :fg-success:' . (__('Action', __FILE__)) . ' ::/fg: ' . $action . ' -- :fg-success:' . (__('Valeur type', __FILE__)) . ' ::/fg: ' . $parametre['value_type'] . ' -- :fg-success:' . (__('Etat Option Inverser', __FILE__)) . '  ::/fg: ' . $_cmd->getConfiguration('invertslide') . ' -- :fg-success:' . (__('Valeur', __FILE__)) . '  ::/fg: ' . $parametre['value'] . ' -- :fg-success:' . (__('Valeur slider', __FILE__)) . ' ::/fg: ' . $_options['slider']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
                     // $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
                     /*if ($cmd !== false) {
