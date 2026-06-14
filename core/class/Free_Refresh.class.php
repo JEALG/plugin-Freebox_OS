@@ -185,7 +185,7 @@ class Free_Refresh
             $para_resultC = array('nb' => 0, 1 => null, 2 => null, 3 => null);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultC, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
             $result = $Free_API->universal_get('universalAPI', null, null, 'dhcp/config/', true, true, false);
-            $list = 'ip_range_end,ip_range_start,gateway';
+            $list = 'ip_range_end,ip_range_start,gateway,sticky_assign,always_broadcast,ignore_out_of_range_hint';
             $para_resultC = array('nb' => 0, 1 => null, 2 => null, 3 => null);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultC, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         }
@@ -1057,15 +1057,15 @@ class Free_Refresh
         if ($result != false || $result != NULL) {
             foreach ($result['show_endpoints'] as $Cmd) {
                 foreach ($EqLogics->getCmd('info') as $Command) {
-                    if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
-                        if ($Command->getConfiguration('info') == 'mouv_sensor') {
+                    if ($Command->getLogicalId() === $Cmd['id'] && $Command->getConfiguration('TypeNode') === 'nodes') {
+                        if ($Command->getConfiguration('info') === 'mouv_sensor') {
                             $_value = false;
                             if ($Cmd['value'] == false) {
                                 $_value = true;
                             }
                         } else {
                             $_value = $Cmd['value'];
-                            if ($Cmd['name'] == 'battery') {
+                            if ($Cmd['name'] === 'battery') {
                                 $EqLogics->batteryStatus($_value);
                             }
                         }
@@ -1273,6 +1273,13 @@ class Free_Refresh
         $list = 'enabled';
         $para_LogicalId = array('enabled' => 'wifiWPS');
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/wps/config', true, true, true);
+        $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
+        Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+        $para_LogicalId = null;
+
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: Steering Wifi');
+        $list = 'steering_level';
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/steering/config', true, true, true);
         $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_LogicalId = null;

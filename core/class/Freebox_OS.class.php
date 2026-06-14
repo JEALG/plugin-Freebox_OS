@@ -295,6 +295,13 @@ class Freebox_OS extends eqLogic
 		$value_log = ' ';
 		if ($action[0]['LogicalIdEqLogic'] == 'management') {
 			switch ($action[0]['LogicalId']) {
+				case "sticky_assignOn":
+				case "sticky_assignOff":
+				case "always_broadcastOn":
+				case "always_broadcastOff":
+				case "ignore_out_of_range_hintOn":
+				case "ignore_out_of_range_hintOff":
+					break;
 				case 'host':
 				case 'host_type':
 				case 'method':
@@ -1038,6 +1045,7 @@ class Freebox_OS extends eqLogic
 			'wifiAPID' => 'wifiAP',
 			'wifiAPName' => 'Wifi Access Points',
 			'wifistandbyName' => (__('Planification Wifi', __FILE__)),
+			'wifi_steering' => (__('Steering Wifi', __FILE__)),
 			'wifiECOName' => (__('Mode Eco Wifi', __FILE__))
 		);
 	}
@@ -1248,6 +1256,5 @@ class Freebox_OSCmd extends cmd
 
 		array_push($array, $update);
 		cache::set("Freebox_OS::actionlist", $array);
-		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 }

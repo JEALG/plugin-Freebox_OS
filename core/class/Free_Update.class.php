@@ -93,6 +93,10 @@ class Free_Update
                 if ($logicalId == 'start') {
                     Free_Refresh::RefreshInformation($logicalId_eq->getId(), $typerefresh);
                 }
+                if ($typerefresh === '_UPDATE') {
+                    $typerefresh = null;
+                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                }
                 break;
             case 'netshare':
                 Free_Update::update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -326,7 +330,29 @@ class Free_Update
     private static function update_management($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         $option = null;
+        $_enabled = true;
+
+        $_OFF = substr($logicalId, -3);
+        $_ON = substr($logicalId, -2);
+        if ($_OFF == "Off") {
+            $_enabled = FALSE;
+            $logicalId = substr($logicalId, 0, -3);
+            $list = '_UPDATE';
+        }
+        if ($_ON == "On") {
+            $logicalId = substr($logicalId, 0, -2);
+            $list = '_UPDATE';
+        }
         switch ($logicalId) {
+            case "ignore_out_of_range_hint":
+                $Free_API->universal_put($_enabled, 'universalAPI', null, null, $logicalId, null, 'dhcp/config/');
+                break;
+            case "always_broadcast":
+                $Free_API->universal_put($_enabled, 'universalAPI', null, null, 'always_broadcast', null, 'dhcp/config/');
+                break;
+            case "sticky_assign":
+                $Free_API->universal_put($_enabled, 'universalAPI', null, null, 'sticky_assign', null, 'dhcp/config/');
+                break;
             case "host":
             case "host_mac":
             case "host_type":
@@ -880,7 +906,12 @@ class Free_Update
                     $parametre = 1;
                     $Free_API->universal_put($parametre, 'wifi', null, null, 'wps/stop', null, null);
                     break;
-
+                case 'mode_steering_level':
+                    $option = array(
+                        "steering_level" =>  $_options['select']
+                    );
+                    $Free_API->universal_put(null, 'universal_put', null, null, 'wifi/steering/config', 'PUT', $option);
+                    break;
                 default:
                     $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start', null, null);
                     break;
