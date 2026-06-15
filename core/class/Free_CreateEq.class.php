@@ -89,7 +89,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_system_full($logicalinfo, $templatecore_V4, $order);
                 break;
             case 'wifi':
-                Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $order);
+                Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $order, $API_version);
                 break;
             default:
                 Freebox_OS::FreeboxAPI();
@@ -1285,7 +1285,7 @@ class Free_CreateEq
         }
     }
 
-    private static function createEq_wifi($logicalinfo, $templatecore_V4, $order = 0)
+    private static function createEq_wifi($logicalinfo, $templatecore_V4, $order = 0, $API_version)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' ──');
         $updateicon = false;
@@ -1319,7 +1319,11 @@ class Free_CreateEq
         $order = 60;
         Free_CreateEq::createEq_wifi_Eco($logicalinfo, $templatecore_V4, $order, $Wifi);
         $order = 70;
-        Free_CreateEq::createEq_wifi_steering($logicalinfo, $templatecore_V4, $order, $Wifi);
+        if ($API_version != 'v15') {
+            Free_CreateEq::createEq_wifi_steering($logicalinfo, $templatecore_V4, $order, $Wifi);
+        } else {
+            log::add('Freebox_OS', 'error', __('La version minimun de l\'API doit être en', __FILE__) . ' = v16 ───▶︎ ' . (__('La version actuelle de la box est', __FILE__)) . ' ' . $API_version);
+        }
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 

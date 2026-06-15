@@ -1277,12 +1277,17 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_LogicalId = null;
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: Steering Wifi');
-        $list = 'steering_level';
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/steering/config', true, true, true);
-        $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
-        Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
-        $para_LogicalId = null;
+        $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        if ($API_version != 'v15') {
+            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: Steering Wifi');
+            $list = 'steering_level';
+            $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/steering/config', true, true, true);
+            $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
+            Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+            $para_LogicalId = null;
+        } else {
+            log::add('Freebox_OS', 'warning', ':fg-warning:' . __('La version minimun de l\'API doit être en', __FILE__) . ' = v16 :/fg:───▶︎ ' . (__('La version actuelle de la box est', __FILE__)) . ' ' . $API_version);
+        }
 
         log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Status des Cartes', __FILE__)));
         $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
