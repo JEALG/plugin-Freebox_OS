@@ -1,13 +1,7 @@
 name: "Php 8.0"
 
 on:
-  workflow_call:
   push:
-    branches:
-      - beta
-    paths:
-      - "**.php"
-  pull_request:
     branches:
       - beta
     paths:
