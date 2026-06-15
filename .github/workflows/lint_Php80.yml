@@ -4,18 +4,13 @@ on:
   push:
     branches:
       - beta
-    paths:
-      - "**.php"
 
 jobs:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-      name: Check out Git repository
-      with:
-        dir: "."
-
-    - uses: prestashop/github-action-php-lint/8.0@v2.1
-      name: PHP syntax checker 8.0
-      with:
-        dir: "."
+ - name: PHP syntax checker 7.3
+    uses: PrestaShopCorp/github-action-php-lint/7.3@v1
+    with:
+      folder-to-exclude: "! -path \"./vendor/*\" ! -path \"./customer/folder/excluded/*\""
+  - name: PHP syntax checker 8.4
+    uses: PrestaShopCorp/github-action-php-lint/8.4@v1
+    with:
+      folder-to-exclude: "! -path \"./vendor/*\" ! -path \"./customer/folder/excluded/*\""
