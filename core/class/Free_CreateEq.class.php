@@ -146,7 +146,7 @@ class Free_CreateEq
                     Free_CreateEq::createEq_management($logicalinfo, $templatecore_V4, $order);
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, $order, 'LAN');
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, $order, 'WIFIGUEST');
-                    Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $order);
+                    Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $order, $API_version);
                 } else {
                     log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('BOX EN MODE BRIDGE : LES ÉQUIPEMENTS SUIVANTS NE SONT PAS CRÉES', __FILE__)) . ':/fg:');
                     log::add('Freebox_OS', 'debug', '| ───▶︎ ' . $logicalinfo['airmediaName']);
@@ -797,7 +797,7 @@ class Free_CreateEq
         $EqLogic->AddCommand(__('Rechercher les nouveaux appareils', __FILE__), 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  $order++, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
-    private static function createEq_netshare($logicalinfo, $templatecore_V4)
+    private static function createEq_netshare($logicalinfo, $templatecore_V4, $order)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['netshareName'] . ' ──');
         $color_on = ' icon_green';
