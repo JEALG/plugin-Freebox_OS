@@ -580,6 +580,9 @@ class Free_CreateEq
         $iconorientationF = 'fas fa-map-signs icon_orange';
         $iconled_strip_animation = 'fas fa-highlighter icon_red';
         $iconled_strip = 'fas fa-traffic-light icon_green';
+        $iconuse_planning = 'far fa-calendar-alt';
+        $iconuse_planningON = 'far fa-calendar-alt icon_red';
+        $iconuse_planningOFF = 'far fa-calendar-alt icon_red';
         $iconwifi = 'fas fa-wifi icon_orange';
         $iconhide_status_led = 'icon fas fa-highlighter icon_blue';
         $updateicon = false;
@@ -630,6 +633,10 @@ class Free_CreateEq
                 $led_strip = $LCD->AddCommand(__('Etat du bandeau de LED', __FILE__), 'led_strip_enabled', 'info', 'binary', null, null, 'SWITCH_STATE', 0, null, null, 0, $iconled_strip, 0, null, null, $order++, 1, true, 'never', null, true, null, null, null, null, null, null, null, null);
                 $LCD->AddCommand(__('Bandeau LED On', __FILE__), 'led_strip_enabledOn', 'action', 'other', 'core::toggleLine', null, 'SWITCH_ON', 1, $led_strip, 'led_strip_enabled', 0, $iconled_strip, 1, null, null, $order++, '0', true, 'never', null, true, null, null, null, null, null, null, null, null);
                 $LCD->AddCommand(__('Bandeau LED Off', __FILE__), 'led_strip_enabledOff', 'action', 'other', 'core::toggleLine', null, 'SWITCH_OFF', 1, $led_strip, 'led_strip_enabled', 0, $iconled_strip, 1, null, null, $order++, '0', true, 'never', null, true, null, null, null, null, null, null, null, null);
+                // Utilisation planning
+                //  $use_planning = $LCD->AddCommand(__('Planning Activé', __FILE__), 'use_planning', 'info', 'binary', null, null, 'SWITCH_STATE', 0, null, null, 0, $iconuse_planning, 0, null, null, $order++, 1, true, 'never', null, true, null, null, null, null, null, null, null, null);
+                // $LCD->AddCommand(__('Planning On', __FILE__), 'use_planningOn', 'action', 'other', 'core::toggleLine', null, 'SWITCH_ON', 1, $use_planning, 'use_planning', 0, $iconuse_planningON, 1, null, null, $order++, '0', true, 'never', null, true, null, null, null, null, null, null, null, null);
+                //$LCD->AddCommand(__('Planning Off', __FILE__), 'use_planningOff', 'action', 'other', 'core::toggleLine', null, 'SWITCH_OFF', 1, $use_planning, 'use_planning', 0, $iconuse_planningOFF, 1, null, null, $order++, '0', true, 'never', null, true, null, null, null, null, null, null, null, null);
             } else {
                 log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
             }
