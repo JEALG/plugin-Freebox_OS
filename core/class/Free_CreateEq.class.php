@@ -146,7 +146,7 @@ class Free_CreateEq
                     Free_CreateEq::createEq_management($logicalinfo, $templatecore_V4, $order);
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, $order, 'LAN');
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, $order, 'WIFIGUEST');
-                    Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $order, $API_version);
+                    Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $API_version, $order);
                 } else {
                     log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('BOX EN MODE BRIDGE : LES ÉQUIPEMENTS SUIVANTS NE SONT PAS CRÉES', __FILE__)) . ':/fg:');
                     log::add('Freebox_OS', 'debug', '| ───▶︎ ' . $logicalinfo['airmediaName']);
@@ -1292,7 +1292,7 @@ class Free_CreateEq
         }
     }
 
-    private static function createEq_wifi($logicalinfo, $templatecore_V4, $order = 0, $API_version)
+    private static function createEq_wifi($logicalinfo, $templatecore_V4, $API_version, $order = 0)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' ──');
         $updateicon = false;
