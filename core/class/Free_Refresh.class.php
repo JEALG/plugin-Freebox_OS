@@ -185,7 +185,7 @@ class Free_Refresh
             $para_resultC = array('nb' => 0, 1 => null, 2 => null, 3 => null);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultC, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
             $result = $Free_API->universal_get('universalAPI', null, null, 'dhcp/config/', true, true, false);
-            $list = 'ip_range_end,ip_range_start,gateway';
+            $list = 'ip_range_end,ip_range_start,gateway,sticky_assign,always_broadcast,ignore_out_of_range_hint';
             $para_resultC = array('nb' => 0, 1 => null, 2 => null, 3 => null);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultC, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         }
@@ -799,10 +799,10 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY4, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, 'radio', $para_Value_calcul);
         $para_LogicalId = null;
     }
-    private static function refresh_titles_string($EqLogic, $data, $log_result, $Cmd, $logicalId_name = null, $_cmd_id = null)
+    private static function refresh_titles_string($EqLogic, $data, $log_result, $Cmd, $logicalId_name = null, $_cmd_id = null, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null, $para_Config_eq = null)
     {
-        $_Alarm_mode_value = null;
-        $_Alarm_stat_value = null;
+        $_Alarm_mode_value = '0';
+        $_Alarm_stat_value = '0';
 
         if ($data['name'] == 'state' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
 
@@ -844,19 +844,22 @@ class Free_Refresh
                     $_Alarm_log = 'Alarme désactivée';
                     break;
                 default:
-                    $_Alarm_mode_value = null;
+                    $_Alarm_mode_value = '0';
                     $_Alarm_log = 'Aucun Mode';
                     break;
             }
+            $result = array(
+                "ALARM_state" => $_Alarm_stat_value,
+                "ALARM_mode" => $_Alarm_mode_value,
+                "ALARM_enable" => $_Alarm_enable_value,
+            );
             if ($log_result == true) {
                 log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour commande spécifique pour Homebridge', __FILE__)) . ' ::/fg: ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
             }
-            $EqLogic->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
-            $EqLogic->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
-            $EqLogic->checkAndUpdateCmd('ALARM_mode', $_Alarm_mode_value);
-            if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Statut', __FILE__)) . ' (ALARM_state) = ' . $_Alarm_stat_value . ' / Actif (ALARM_enable) = ' . $_Alarm_enable_value . ' / Mode (ALARM_mode) = ' . $_Alarm_mode_value);
-            }
+            $list = 'ALARM_state,ALARM_mode,ALARM_enable';
+            //$para_LogicalId = array('ALARM_state' => 'ALARM_state', 'ALARM_mode' => 'ALARM_mode', 'ALARM_enable' => 'ALARM_enable');
+            $para_resultC = array('nb' => 0, 1 => null, 2 => null, 3 => null);
+            Free_Refresh::refresh_VALUE($EqLogic, $result, $list, $para_resultC, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $para_Config_eq);
         };
 
         $_value = null;
@@ -1017,6 +1020,10 @@ class Free_Refresh
                 $_cmd_ep_id = $data['ep_id'];
             }
             $EqLogic->checkAndUpdateCmd($_cmd_ep_id, $_value);
+            if ($Cmd->getName() == 'Etat Code PIN') {
+                $_value = 'XXXXXXXXX';
+            }
+            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . str_replace(["\r", "\n"], "", $_value) . ' ' . $Cmd->getUnite());
         }
     }
     private static function refresh_titles($EqLogics, $Free_API)
@@ -1038,7 +1045,7 @@ class Free_Refresh
                 }
             }
         }
-        if ($EqLogics->getConfiguration('type2') == 'pir' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'dws' || $EqLogics->getConfiguration('type') == 'camera' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'kfb' || $EqLogics->getConfiguration('type2') == 'shutter' || $EqLogics->getConfiguration('type2') == 'basic_shutter') {
+        if ($EqLogics->getConfiguration('type2') === 'pir' || $EqLogics->getConfiguration('type2') === 'alarm' || $EqLogics->getConfiguration('type2') === 'dws' || $EqLogics->getConfiguration('type') === 'camera' || $EqLogics->getConfiguration('type2') === 'alarm' || $EqLogics->getConfiguration('type2') === 'kfb' || $EqLogics->getConfiguration('type2') === 'shutter' || $EqLogics->getConfiguration('type2') === 'basic_shutter') {
             if (isset($data['ep_id'])) {
                 Free_Refresh::refresh_titles_nodes($EqLogics, $Free_API, $data['ep_id'], $log_result, $cmd);
             }
@@ -1050,19 +1057,20 @@ class Free_Refresh
         if ($result != false || $result != NULL) {
             foreach ($result['show_endpoints'] as $Cmd) {
                 foreach ($EqLogics->getCmd('info') as $Command) {
-                    if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
-                        if ($Command->getConfiguration('info') == 'mouv_sensor') {
+                    if ($Command->getLogicalId() === $Cmd['id'] && $Command->getConfiguration('TypeNode') === 'nodes') {
+                        if ($Command->getConfiguration('info') === 'mouv_sensor') {
                             $_value = false;
                             if ($Cmd['value'] == false) {
                                 $_value = true;
                             }
                         } else {
                             $_value = $Cmd['value'];
-                            if ($Cmd['name'] == 'battery') {
+                            if ($Cmd['name'] === 'battery') {
                                 $EqLogics->batteryStatus($_value);
                             }
                         }
                         $EqLogics->checkAndUpdateCmd($Cmd['id'], $_value);
+                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd['label'] . ' ::/fg: ' . str_replace(["\r", "\n"], "", $_value) . ' ');
                         break;
                     }
                 }
@@ -1269,6 +1277,18 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_LogicalId = null;
 
+        $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        if ($API_version != 'v15') {
+            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: Steering Wifi');
+            $list = 'steering_level';
+            $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/steering/config', true, true, true);
+            $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
+            Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+            $para_LogicalId = null;
+        } else {
+            log::add('Freebox_OS', 'warning', ':fg-warning:' . __('La version minimun de l\'API doit être en', __FILE__) . ' = v16 :/fg:───▶︎ ' . (__('La version actuelle de la box est', __FILE__)) . ' ' . $API_version);
+        }
+
         log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Status des Cartes', __FILE__)));
         $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
         $nb_card = count($result_ap['result']);
@@ -1383,7 +1403,7 @@ class Free_Refresh
                             if ($para_Config != null) { // Mise à jour des paramétres Config
                                 if (isset($para_Config[$fieldname])) {
                                     config::save($para_Config[$fieldname], $value, 'Freebox_OS');
-                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour de la configuratuon du Plugin', __FILE__)) . ' ::/fg: ' . $para_Config[$fieldname]);
+                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour de la configuration du Plugin', __FILE__)) . ' ::/fg: ' . $para_Config[$fieldname]);
                                 }
                             }
                             if ($para_Config_eq != null) { // Mise à jour des paramétres Config de l'équipement
@@ -1394,7 +1414,7 @@ class Free_Refresh
                                     }
                                     $EqLogics->setConfiguration($para_Config_eq[$fieldname], $value);
                                     $EqLogics->save(true);
-                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour de la configuratuon de l\'équipement', __FILE__)) . ' ::/fg: ' . $para_Config_eq[$fieldname] . ' avec la valeur ' . $value);
+                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour de la configuration de l\'équipement', __FILE__)) . ' ::/fg: ' . $para_Config_eq[$fieldname] . ' avec la valeur ' . $value);
                                 }
                             }
                             break;

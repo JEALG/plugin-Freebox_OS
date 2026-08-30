@@ -214,7 +214,7 @@ function removeLogicId($cmdDel)
 
 function updateConfig()
 {
-	$FREEBOX_API = 'v14';
+	$FREEBOX_API = 'v15';
 	$Config_KEY = 'FREEBOX_SERVER_IP';
 	$Config_value = 'mafreebox.freebox.fr';
 	$Config = config::byKey($Config_KEY, 'Freebox_OS');

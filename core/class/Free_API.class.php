@@ -853,7 +853,7 @@ class Free_API
                         $time = date('H:i', $result['result'][$k]['datetime']);
 
                         if ($jour >= $timestampToday) {
-                            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure d\'appel avec l\'ID', __FILE__)) . ' ' . $result['result'][$k]['id'] . ')::/fg: ' . $date . ' ' . $time  . ' ('  . $jour . ')');
+                            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Date et heure d\'appel avec l\'ID', __FILE__)) . ' ' . $result['result'][$k]['id'] . '::/fg: ' . $date . ' ' . $time  . ' ('  . $jour . ')');
                             if ($result['result'][$k]['name'] == null) {
                                 $name = $result['result'][$k]['number'];
                             } else {
