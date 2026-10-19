@@ -170,6 +170,9 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', $type_Log, '┌── :fg-success: ' . (__('Vérification de la compatibilité de la box avec certaines options', __FILE__)) . ' :/fg:──');
         $Free_API = new Free_API();
+        // Vérification mode freebox : router / Bridge
+        $router = $Free_API->universal_get('universalAPI', null, null, 'lan/config/', true, true, null);
+        // Vérification du système
         $result = $Free_API->universal_get('universalAPI', null, null, 'system', true, true, null);
         if (isset($result['disk_status'])) {
             $disk_status_description = $result['disk_status'];
@@ -252,11 +255,6 @@ class Free_CreateEq
             log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ ' . (__('Etat CRON Domotique', __FILE__)) . ' ::/fg: ' . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'));
         }
         log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ ' . (__('Box compatible avec la domotique', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
-        // Vérification mode freebox : router / Bridge
-        $router = $Free_API->universal_get('universalAPI', null, null, 'lan/config/', true, true, null);
-        config::save('TYPE_FREEBOX_MODE', $router['mode'], 'Freebox_OS');
-        log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ ' . (__('Mode réseau', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS'));
-
         // Ecriture variable
         $Setting = array(
             'has_vm' => $has_vm,
@@ -269,6 +267,8 @@ class Free_CreateEq
             'disk_status_description' => $disk_status_description,
             'disk_status' => $disk_status
         );
+        config::save('TYPE_FREEBOX_MODE', $router['mode'], 'Freebox_OS');
+        log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ ' . (__('Mode réseau', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS'));
         // board_Name
         config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
         log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ Board name ::/fg: ' . config::byKey('TYPE_FREEBOX', 'Freebox_OS'));
