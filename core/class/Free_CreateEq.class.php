@@ -252,6 +252,10 @@ class Free_CreateEq
             log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ ' . (__('Etat CRON Domotique', __FILE__)) . ' ::/fg: ' . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'));
         }
         log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ ' . (__('Box compatible avec la domotique', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
+        // Vérification mode freebox : router / Bridge
+        $router = $Free_API->universal_get('universalAPI', null, null, 'lan/config/', true, true, null);
+        config::save('TYPE_FREEBOX_MODE', $router['mode'], 'Freebox_OS');
+        log::add('Freebox_OS', $type_Log, '| :fg-info:───▶︎ ' . (__('Mode réseau', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS'));
 
         // Ecriture variable
         $Setting = array(
