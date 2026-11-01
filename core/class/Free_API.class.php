@@ -93,7 +93,8 @@ class Free_API
             $_URL = $this->serveur . '/api/' . $API_version . '/login/';
             $http = new com_http($_URL);
             $json = $http->exec(30, 2);
-            log::add('Freebox_OS', 'debug', '[Freebox Password] : ' . $json);
+            //log::add('Freebox_OS', 'debug', '[Freebox Password] : ' . $json);
+            log::add('Freebox_OS', 'debug', ' OK  [Freebox Password]');
             $json_connect = json_decode($json, true);
             if ($json_connect['success'])
                 cache::set('Freebox_OS::Challenge', $json_connect['result']['challenge'], 0);
@@ -127,7 +128,8 @@ class Free_API
                 'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
             )));
             $json = $http->exec(30, 2);
-            log::add('Freebox_OS', 'debug', '[Freebox Open Session] : ' . $json);
+            log::add('Freebox_OS', 'debug', ' OK  [Freebox Open Session]');
+            //log::add('Freebox_OS', 'debug', '[Freebox Open Session] : ' . $json);
             $result = json_decode($json, true);
 
             if (!$result['success']) {
@@ -137,10 +139,10 @@ class Free_API
                     if ($this->getFreeboxOpenSession() === false)
                         return false;
                 }
-                log::add('Freebox_OS', 'debug', '[Freebox Etat Session] : KO / ' . $result['success']);
+                log::add('Freebox_OS', 'debug', ' KO  [Freebox Etat Session] : ' . $result['success']);
             } else {
                 cache::set('Freebox_OS::SessionToken', $result['result']['session_token'], 0);
-                log::add('Freebox_OS', 'debug', '[Freebox Etat Session] : OK / ' . $result['success']);
+                log::add('Freebox_OS', 'debug', ' OK  [Freebox Etat Session]');
                 return true;
             }
             return false;
