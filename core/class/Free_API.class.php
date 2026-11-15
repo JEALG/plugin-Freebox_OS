@@ -106,6 +106,81 @@ class Free_API
         }
     }
 
+    public function checkSessionToken()
+    {
+        try {
+            $API_version = $this->API_version;
+            // Récupération du SESSION_TOKEN.
+            $session_token = cache::byKey('Freebox_OS::SessionToken');
+            $token = is_object($session_token) ? $session_token->getValue('') : '';
+
+            if ($token == '') {
+                return 'invalid';
+            }
+            // Empreinte du token.
+            $tokenHash = hash('sha256', $token);
+
+            // Vérification du cache (5 minutes).
+            $sessionCheck = cache::byKey('Freebox_OS::SessionCheck');
+            $checkedHash = is_object($sessionCheck) ? $sessionCheck->getValue('') : '';
+
+            if ($checkedHash === $tokenHash) {
+                return 'valid';
+            }
+            // Endpoint de vérification : API v11.
+            $url = 'http://' . $this->serveur . '/api/' . $API_version . '/connection/';
+            log::add('Freebox_OS', 'debug', '[Session Check] URL : ' . $url);
+            // Requête GET authentifiée.
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'X-Fbx-App-Auth: ' . $token
+            ));
+
+            $content = curl_exec($ch);
+            $errorno = curl_errno($ch);
+            $error = curl_error($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            // Erreur cURL.
+            if ($errorno !== 0 || $content === false) {
+                log::add('Freebox_OS', 'warning', ' KO  [Session Check] Erreur cURL : ' . $error);
+                return 'error';
+            }
+            // Décodage JSON.
+            $result = json_decode($content, true);
+
+            if (!is_array($result) || !isset($result['success'])) {
+                log::add('Freebox_OS', 'warning', ' KO  [Session Check] Réponse invalide HTTP ' . $httpCode . ' : ' . $content);
+                return 'error';
+            }
+            // SESSION_TOKEN valide.
+            if ($result['success'] === true) {
+                cache::set('Freebox_OS::SessionCheck', $tokenHash, 300);
+                log::add('Freebox_OS', 'debug', ' OK  [Session Check] SESSION_TOKEN valide');
+                return 'valid';
+            }
+
+            // SESSION_TOKEN invalide.
+            if (isset($result['error_code']) && $result['error_code'] === 'auth_required') {
+                cache::byKey('Freebox_OS::SessionCheck')->remove();
+                log::add('Freebox_OS', 'debug', ' KO  [Session Check] SESSION_TOKEN invalide');
+                return 'invalid';
+            }
+            // Autre erreur Freebox.
+            log::add('Freebox_OS', 'warning', '[Session Check] Échec HTTP ' . $httpCode . ' : ' . json_encode($result));
+            return 'error';
+        } catch (Exception $e) {
+            log::add('Freebox_OS', 'error', ' KO  [Session Check] : ' . $e->getMessage());
+            return 'error';
+        }
+    }
+
     public function getFreeboxOpenSession() //Doit correspondre a la fonction session de freboxsession.js homebridge freebox
     {
         try {
@@ -183,113 +258,140 @@ class Free_API
     public function fetch($api_url, $params = array(), $method = 'GET', $Type_log = false)
     {
         try {
-            $session_token = cache::byKey('Freebox_OS::SessionToken');
-            $url = 'http://' . $this->serveur . $api_url;
-            while ($session_token->getValue('') == '') {
-                $session_token = cache::byKey('Freebox_OS::SessionToken');
+            // Vérification du SESSION_TOKEN.
+            $sessionStatus = $this->checkSessionToken();
+            if ($sessionStatus === 'error') {
+                log::add('Freebox_OS', 'error', ' KO  ' . '[Freebox Fetch] : ' . (__('Impossible de vérifier la session', __FILE__)));
+                return false;
             }
+            // Renouvellement si le token est invalide ou absent.
+            if ($sessionStatus === 'invalid') {
+                log::add('Freebox_OS', 'debug', ' KO  ' . (__('Le token est invalide', __FILE__)) . ' : ' .  (__('Renouvellement nécessaire', __FILE__)));
+                $this->close_session();
+
+                if ($this->getFreeboxOpenSession() === false) {
+                    log::add('Freebox_OS', 'error', ' KO  ' . (__('Impossible de renouveler le Token', __FILE__)));
+                    return false;
+                }
+
+                $session_token = cache::byKey('Freebox_OS::SessionToken');
+                $token = is_object($session_token) ? $session_token->getValue('') : '';
+                if ($token == '') {
+                    log::add('Freebox_OS', 'error', ' KO  ' . '[Freebox Fetch] : ' . (__('Le Token est absent après renouvellement', __FILE__)));
+                    return false;
+                }
+
+                cache::set('Freebox_OS::SessionCheck', hash('sha256', $token), 300);
+                log::add('Freebox_OS', 'debug', ' OK  ' . (__('Le token a été renouvelé', __FILE__)));
+            }
+            // Récupération du token.
+            $session_token = cache::byKey('Freebox_OS::SessionToken');
+            $token = is_object($session_token) ? $session_token->getValue('') : '';
+            if ($token == '') {
+                log::add('Freebox_OS', 'error', ' KO  ' . '[Freebox Fetch] : ' . (__('Le Token est introuvable', __FILE__)));
+                return false;
+            }
+
+            $url = 'http://' . $this->serveur . $api_url;
+
             if (!isset($Type_log['log_request'])) {
                 $Type_log['log_request'] = true;
             }
-            if ($Type_log['log_request']  != false) {
-                if (empty($params)) {
-                    $params_log = '';
-                } else {
-                    $params_log = json_encode($params);
-                }
-                $requetURL = '[Freebox Request Connexion] : ' . $method . ' ' . (__('sur la l\'adresse', __FILE__)) . ' : ' . $url  .  $params_log;
+
+            if ($Type_log['log_request'] != false) {
+                $params_log = empty($params) ? '' : json_encode($params);
+                $requetURL = '[Freebox Request Connexion] : ' . $method . ' ' . (__('sur l\'adresse', __FILE__)) . ' : ' . $url . $params_log;
                 log::add('Freebox_OS', 'debug', $requetURL);
-            };
+            }
+
             $ch = curl_init();
-            //CURLOPT_URL : l'url cible que la requête devra appeler (une chaine de caractères typée URL).
             curl_setopt($ch, CURLOPT_URL, $url);
-            // Force une nouvelle connection
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-            //CURLOPT_HEADER : si nous souhaitons ou non récupérer les informations de l'entête (boolean). 
             curl_setopt($ch, CURLOPT_HEADER, false);
-            //CURLOPT_RETURNTRANSFER : si nous voulons ou non récupérer le contenu de la requête appelée (boolean). 
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            //Cookie pour la session
             curl_setopt($ch, CURLOPT_COOKIESESSION, true);
-            //Timeout
             $_timeout = 60;
-            //CURLOPT_CONNECTTIMEOUT : le délais maximum exprimé en secondes avant l'abandon de la connexion au serveur lors de l'établissement de la connexion (entier). 
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $_timeout);
-            //CURLOPT_TIMEOUT : le délais maximum exprimé en secondes avant l'abandon de la résolution de la requête curl lors de son éxécution (entier). 
             curl_setopt($ch, CURLOPT_TIMEOUT, $_timeout);
             curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            if ($method == "POST") {
-                //CURLOPT_POST : si la requête doit utiliser le protocole POST pour sa résolution (boolean). 
+
+            if ($method == 'POST') {
                 curl_setopt($ch, CURLOPT_POST, true);
             }
-            if ($method == "DELETE" || $method == "PUT" ||  $method == "POST" || $method == "GET") {
-                //CURLOPT_CUSTOMREQUEST : pour forcer le format de la commande HTTP (chaine de caractères, PUT,GET,POST,CONNECT,HEAD,etc.).
+            if (in_array($method, array('DELETE', 'PUT', 'POST', 'GET'))) {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
             }
+
             if ($params) {
-                //CURLOPT_POSTFIELDS : le tableau de paramètres à assigner à une requête POST (tableau associatif). 
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
             }
-            //CURLOPT_HTTPHEADER : un tableau non associatif permettant de modifier des paramètres du header envoyé par la requête (tableau).
-            $token =  $session_token->getValue('');
-            $headers = array("Content-Type: application/json", "X-Fbx-App-Auth: $token");
+            $headers = array('Content-Type: application/json', 'X-Fbx-App-Auth: ' . $token);
             curl_setopt($ch, CURLOPT_VERBOSE, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: " . $session_token->getValue('')));
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             $content = curl_exec($ch);
-            $errorno = 0;
-            //Contrôler la présence d'erreur fatale dans l'éxécution de la requête par curl en php
-            if (curl_errno($ch) !== 0) {
-                $error = curl_error($ch);
-                $errorno = curl_errno($ch);
-            }
+            $errorno = curl_errno($ch);
+            $error = curl_error($ch);
             curl_close($ch);
             if (!isset($Type_log['log_result'])) {
                 $Type_log['log_result'] = true;
             }
             if ($Type_log['log_result'] != false) {
-                log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . str_replace(["\r", "\n"], "", $content));
+                log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . str_replace(array("\r", "\n"), '', (string) $content));
             }
             if ($errorno !== 0) {
-                return '[WARNING] ' . (__('Erreur de connexion cURL vers', __FILE__)) . ' ' . $this->serveur . $api_url . ' : ' . $error;
-            } else {
-                $result = json_decode($content, true);
-                if ($result == null) return false;
-                if (isset($result['success']) || isset($result['error_code'])) {
-                    if (!$result['success']) {
-                        $msg = $this->msg_box($result['error_code'], $result['msg'], $api_url);
-                        $log_level_color_start = '';
-                        $log_level_color_end = '';
-                        if ($msg['log_level'] === 'Debug') {
-                            $log_level_color_start = ':fg-warning: ───▶︎ ';
-                            $log_level_color_end = ':/fg:';
-                        }
-                        log::add('Freebox_OS', $msg['log_level'],  $log_level_color_start . $msg['msg_box1'] . ' ───▶︎ ' . $log_level_color_end . (__('Code Erreur', __FILE__)) . ' = ' . $result['error_code']);
-                        if ($msg['return_result'] == false) {
+                return '[WARNING] ' . (__('Erreur de connexion cURL vers', __FILE__)) . ' ' .
+                    $this->serveur . $api_url . ' : ' . $error;
+            }
+
+            $result = json_decode($content, true);
+
+            if (!is_array($result)) {
+                return false;
+            }
+
+            if (isset($result['success']) || isset($result['error_code'])) {
+
+                if (isset($result['success']) && $result['success'] === false) {
+
+                    $msg = $this->msg_box(isset($result['error_code']) ? $result['error_code'] : null, isset($result['msg']) ? $result['msg'] : '', $api_url);
+                    $log_level_color_start = '';
+                    $log_level_color_end = '';
+                    if ($msg['log_level'] === 'Debug') {
+                        $log_level_color_start = ':fg-warning: ───▶︎ ';
+                        $log_level_color_end = ':/fg:';
+                    }
+                    log::add('Freebox_OS',  $msg['log_level'], $log_level_color_start . $msg['msg_box1'] . ' ───▶︎ ' . $log_level_color_end . (__('Code Erreur', __FILE__)) . ' = ' . $result['error_code']);
+
+                    if ($msg['return_result'] == false) {
+                        return false;
+                    } elseif ($msg['return_result'] == 'auth_required') {
+                        // Invalidation du contrôle du token.
+                        cache::byKey('Freebox_OS::SessionCheck')->remove();
+                        $this->close_session();
+                        if ($this->getFreeboxOpenSession() === false) {
+                            log::add('Freebox_OS', 'error', ' KO  ' . (__('Impossible de renouveler le Token', __FILE__)));
                             return false;
-                        } else if ($msg['return_result'] == 'auth_required') {
-                            $this->close_session();
-                            $this->getFreeboxOpenSessionData();
-                            log::add('Freebox_OS', $msg['log_level'], $msg['msg_box2'] . ' : ' . $result['error_code']);
-                            $result = 'auth_required';
-                        } else if ($msg['return_result'] == 'result') {
-                            if ($msg['error_code'] != null) {
-                                $result = $msg['error_code'];
-                            }
-                            return $result;
                         }
+                        log::add('Freebox_OS', $msg['log_level'], $msg['msg_box2'] . ' : ' . $result['error_code']);
+                        // La requête initiale n'est pas rejouée.
+                        return 'auth_required';
+                    } elseif ($msg['return_result'] == 'result') {
+                        if ($msg['error_code'] != null) {
+                            return $msg['error_code'];
+                        }
+                        return $result;
                     }
                 }
-                return $result;
             }
+            return $result;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[Freebox Request] : '  . $e->getCode());
+            log::add('Freebox_OS', 'error', '[Freebox Request] : ' . $e->getMessage());
+            return false;
         }
     }
+
     private static function msg_box($error_code, $msg = null, $api_url = null)
     {
         $msg_box2 = null;
@@ -435,28 +537,47 @@ class Free_API
 
     public function close_session()
     {
-        log::add('Freebox_OS', 'debug', ' OK  Close Session  ');
+        //log::add('Freebox_OS', 'debug', ' OK  ' . (__('Fermeture de la session', __FILE__)));
+
         try {
+            // Suppression du challenge.
             $Challenge = cache::byKey('Freebox_OS::Challenge');
             if (is_object($Challenge)) {
                 $Challenge->remove();
             }
+            // Suppression du cache de vérification du SESSION_TOKEN.
+            $SessionCheck = cache::byKey('Freebox_OS::SessionCheck');
+            if (is_object($SessionCheck)) {
+                $SessionCheck->remove();
+            }
+            // Récupération du SESSION_TOKEN.
             $session_token = cache::byKey('Freebox_OS::SessionToken');
             if (!is_object($session_token) || $session_token->getValue('') == '') {
+                log::add('Freebox_OS', 'debug', ' OK  ' . __('Aucune session à fermer', __FILE__));
                 return;
             }
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = config::byKey('FREEBOX_API_DEFAUT', 'Freebox_OS');
                 log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
-            };
+            }
             $_URL = $this->serveur . '/api/' . $API_version . '/login/logout/';
             $http = new com_http($_URL);
             $http->setPost(array());
             $json = $http->exec(2, 2);
+            // Log de la réponse brute de la Freebox.
             log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $json);
+            $result = json_decode($json, true);
+            // Analyse du résultat de la fermeture.
+            if (isset($result['success']) && $result['success'] === true) {
+                log::add('Freebox_OS', 'debug', ' OK  ' . __('La session avec la FREEBOX est correctement fermée', __FILE__));
+            } elseif (isset($result['error_code']) && $result['error_code'] === 'invalid_session') {
+                log::add('Freebox_OS', 'debug', ' OK  ' . __('La session avec la FREEBOX est déjà fermée ou invalide', __FILE__));
+            } else {
+                log::add('Freebox_OS', 'warning', ' KO  ' . __('La fermeture de la session Freebox n’a pas été confirmée', __FILE__));
+            }
+            // Suppression du SESSION_TOKEN.
             $SessionToken = cache::byKey('Freebox_OS::SessionToken');
-
             if (is_object($SessionToken)) {
                 $SessionToken->remove();
             }
