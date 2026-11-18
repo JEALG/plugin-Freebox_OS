@@ -127,53 +127,48 @@ class Free_API
             if ($checkedHash === $tokenHash) {
                 return 'valid';
             }
-            // Endpoint de vérification : API v11.
+            // Endpoint de vérification.
             $url = 'http://' . $this->serveur . '/api/' . $API_version . '/connection/';
             log::add('Freebox_OS', 'debug', '[Session Check] URL : ' . $url);
-            // Requête GET authentifiée.
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPGET, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            // Requête GET authentifiée avec com_http.
+            $http = new com_http($url);
+            $http->setHeader(array(
                 'Content-Type: application/json',
                 'X-Fbx-App-Auth: ' . $token
             ));
 
-            $content = curl_exec($ch);
-            $errorno = curl_errno($ch);
-            $error = curl_error($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            // Erreur cURL.
-            if ($errorno !== 0 || $content === false) {
-                log::add('Freebox_OS', 'warning', ' KO  [Session Check] Erreur cURL : ' . $error);
+            $content = $http->exec(15, 1);
+            // Vérification du contenu reçu.
+            if ($content === false || $content == '') {
+                log::add('Freebox_OS', 'debug', ' KO  [Session Check] ' . (__('La réponse est vide', __FILE__)));
                 return 'error';
             }
             // Décodage JSON.
             $result = json_decode($content, true);
 
             if (!is_array($result) || !isset($result['success'])) {
-                log::add('Freebox_OS', 'warning', ' KO  [Session Check] Réponse invalide HTTP ' . $httpCode . ' : ' . $content);
+                log::add('Freebox_OS', 'warning', ' KO  [Session Check] ' . (__('La réponse est invalide', __FILE__)) . ' : ' . $content);
                 return 'error';
             }
             // SESSION_TOKEN valide.
             if ($result['success'] === true) {
                 cache::set('Freebox_OS::SessionCheck', $tokenHash, 300);
-                log::add('Freebox_OS', 'debug', ' OK  [Session Check] SESSION_TOKEN valide');
+                log::add('Freebox_OS', 'debug', ' OK  [Session Check] ' . (__('Le token est valide', __FILE__)));
                 return 'valid';
             }
 
             // SESSION_TOKEN invalide.
             if (isset($result['error_code']) && $result['error_code'] === 'auth_required') {
-                cache::byKey('Freebox_OS::SessionCheck')->remove();
-                log::add('Freebox_OS', 'debug', ' KO  [Session Check] SESSION_TOKEN invalide');
+                $sessionCheck = cache::byKey('Freebox_OS::SessionCheck');
+                if (is_object($sessionCheck)) {
+                    $sessionCheck->remove();
+                }
+                log::add('Freebox_OS', 'debug', ' KO  [Session Check] ' . (__('Le token est invalide', __FILE__)));
                 return 'invalid';
             }
             // Autre erreur Freebox.
-            log::add('Freebox_OS', 'warning', '[Session Check] Échec HTTP ' . $httpCode . ' : ' . json_encode($result));
+            log::add('Freebox_OS', 'warning', '[Session Check] Échec : ' . json_encode($result));
+
             return 'error';
         } catch (Exception $e) {
             log::add('Freebox_OS', 'error', ' KO  [Session Check] : ' . $e->getMessage());

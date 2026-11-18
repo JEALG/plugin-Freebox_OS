@@ -180,56 +180,56 @@ class Freebox_OS extends eqLogic
 	{
 		$return = array();
 		$return['log'] = 'Freebox_OS';
+		// Vérification de la configuration.
 		if (trim(config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS')) != '' && config::byKey('FREEBOX_SERVER_APP_TOKEN', 'Freebox_OS') != '' && trim(config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS')) != '') {
 			$return['launchable'] = 'ok';
 		} else {
 			$return['launchable'] = 'nok';
 		}
-		$return['state'] = 'ok';
-
-		// Désactivation provisoire du cron RefreshToken.
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
-		if (is_object($cron)) {
-			if ($cron->running()) {
-				$cron->halt();
-			}
-			if ($cron->getEnable() == 1) {
-				$cron->setEnable(0);
-				$cron->save();
-				log::add('Freebox_OS', 'debug', ' OK  ' . (__('Désactivation du cron', __FILE__)) . ' : RefreshToken');
-			}
-		}
-
-		// Contrôle du cron FreeboxPUT.
+		$return['state'] = 'nok';
+		// Vérification du cron FreeboxPUT.
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
-			$return['state'] = 'nok';
+			log::add('Freebox_OS', 'debug', ' KO  CRON FreeboxPUT introuvable');
 			return $return;
 		}
+		// Le cron doit être activé et en cours d'exécution.
+		if ($cron->getEnable() != 1 || !$cron->running()) {
+			log::add('Freebox_OS', 'debug', ' KO  CRON FreeboxPUT - Enable : ' . $cron->getEnable() . ' - Running : ' . ($cron->running() ? '1' : '0'));
+
+			return $return;
+		}
+		$return['state'] = 'ok';
 		return $return;
 	}
+
 	public static function deamon_start($_debug = false)
 	{
-		//log::remove('Freebox_OS');
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] != 'ok') {
 			throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
 		}
 		// Arrêt des anciennes tâches et fermeture de la session.
 		self::deamon_stop();
-		// RefreshToken désactivé. -- Le renouvellement du SESSION_TOKEN est maintenant géré dans fetch() -- Démarrage du cron FreeboxPUT.
+		// Démarrage du cron FreeboxPUT.
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
-			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
+			throw new Exception(__('Le Cron FreeboxPUT est introuvable', __FILE__));
 		}
+		// Activation du cron FreeboxPUT.
+		$cron->setEnable(1);
+		$cron->save();
 		$cron->run();
+
 		// Démarrage conditionnel du cron FreeboxGET.
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == '1') {
 			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 
 			if (!is_object($cron)) {
-				throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
+				throw new Exception(__('Le Cron FreeboxGET est introuvable', __FILE__));
 			}
+			$cron->setEnable(1);
+			$cron->save();
 			$cron->run();
 		}
 	}
@@ -239,32 +239,40 @@ class Freebox_OS extends eqLogic
 		// Arrêt de l'ancien cron RefreshToken (désactivé).
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (!is_object($cron)) {
-			log::add('Freebox_OS', 'debug', __('Tache cron RefreshToken introuvable', __FILE__));
-		} else {
-			$cron->halt();
-			log::add('Freebox_OS', 'debug', ' OK  ' . __('Arrêt ancien cron RefreshToken', __FILE__));
+			throw new Exception(__('Le Cron RefreshToken est introuvable', __FILE__));
 		}
-		// Arrêt du cron FreeboxPUT.
+		if (is_object($cron)) {
+			log::add('Freebox_OS', 'debug', ' OK  ' . __('Arrêt ancien cron RefreshToken', __FILE__));
+			$cron->halt();
+		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
-			log::add('Freebox_OS', 'warning', __('Tache cron FreeboxPUT introuvable', __FILE__));
-		} else {
+			throw new Exception(__('Le Cron FreeboxPUT est introuvable', __FILE__));
+		}
+		if (is_object($cron)) {
 			$cron->stop();
 			sleep(3);
-		}
-		// Arrêt conditionnel du cron FreeboxGET.
-		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') === 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') === '1') {
-			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
-			if (!is_object($cron)) {
-				log::add('Freebox_OS', 'warning', __('Tache cron FreeboxGET introuvable', __FILE__));
-			} else {
-				$cron->stop();
-				sleep(3);
+			if ($cron->running()) {
+				$cron->halt();
 			}
 		}
-		// Suppression du cache des actions.
-		cache::delete('Freebox_OS::actionlist');
-		// Fermeture de la session Freebox.
+		cache::delete("Freebox_OS::actionlist");
+
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == '1') {
+				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron)) {
+					throw new Exception(__('Le Cron FreeboxGET est introuvable', __FILE__));
+				}
+				if (is_object($cron)) {
+					$cron->stop();
+					sleep(3);
+					if ($cron->running()) {
+						$cron->halt();
+					}
+				}
+			}
+		}
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
@@ -942,20 +950,14 @@ class Freebox_OS extends eqLogic
 	{
 		log::add('Freebox_OS', 'debug', '──────────▶︎:fg-warning: Refresh Token :/fg: ◀︎───────────');
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
-		if (!is_object($cron)) {
-			log::add('Freebox_OS', 'debug', 'CRON Freebox PUT ' . (__('introuvable ou déjà supprimé', __FILE__)));
-		} else {
-			if ($cron->running()) {
-				$cron->stop();
-				log::add('Freebox_OS', 'debug', ' OK  ' . (__('Arrêt pour le', __FILE__))  . ' CRON Freebox PUT');
-			} else {
-				log::add('Freebox_OS', 'debug', ' OK  ' . 'CRON Freebox PUT ' . (__('présent mais non actif', __FILE__)));
-			}
+		if (is_object($cron)) {
+			$cron->stop();
+			log::add('Freebox_OS', 'debug', ' OK  ' . (__('Arrêt pour le', __FILE__))  . ' CRON Freebox PUT');
 		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 		if (is_object($cron)) {
 			$cron->stop();
-			log::add('Freebox_OS', 'debug', ' OK  CRON ' . (__('Arrêt', __FILE__)) . ' Freebox GET');
+			log::add('Freebox_OS', 'debug', ' OK  ' . (__('Arrêt pour le', __FILE__))  . ' CRON Freebox GET');
 		}
 		sleep(1);
 		$Free_API = new Free_API();
